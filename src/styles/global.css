@@ -4346,6 +4346,23 @@ textarea:focus-visible {
 /*! Android compact style pack v2 */
 .dashboard-tool-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.dashboard-tool-group {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(34, 211, 238, 0.14);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.34);
+}
+.dashboard-tool-group > strong {
+  color: #e0f2fe;
+  font-size: 13px;
+}
+.dashboard-tool-group-links {
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
   gap: 8px;
 }
@@ -4542,6 +4559,10 @@ textarea:focus-visible {
     display: none;
   }
   .dashboard-tool-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .dashboard-tool-group-links {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 7px;
   }
@@ -4597,7 +4618,7 @@ textarea:focus-visible {
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .dashboard-tool-grid {
+  .dashboard-tool-group-links {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .card {
@@ -4609,7 +4630,7 @@ textarea:focus-visible {
 }
 
 @media (max-width: 380px) {
-  .dashboard-tool-grid {
+  .dashboard-tool-group-links {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .dashboard-grid {

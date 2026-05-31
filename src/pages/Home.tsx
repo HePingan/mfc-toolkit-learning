@@ -4,58 +4,12 @@ import { ModuleCard } from '../components/course/ModuleCard';
 import { useProgress } from '../hooks/useProgress';
 import { labs } from '../data/labs';
 import { quizzes } from '../data/quizzes';
-import { homeToolShortcuts } from '../config/navigation';
+import { homePrimaryActions, homeToolShortcuts, toolNavGroups } from '../config/navigation';
 
 const valuePoints = [
   '不只是学语法，而是把串口、网络、数据保存整合成工具',
   '不只是看概念，而是用交互实验把协议帧、内存、消息映射跑一遍',
   '不只是做题，而是沉淀错题本、掌握度和最终项目验收清单',
-];
-
-const quickActions = [
-  { to: '/modules/overview', label: '开始学习', tone: 'primary' },
-  { to: '/roadmap', label: '学习路线' },
-  { to: '/labs', label: '进入实验室' },
-  { to: '/practice', label: '本地实战' },
-];
-
-const featureGroups = [
-  {
-    title: '工程落地',
-    desc: '从浏览器练习迁移到 Visual Studio / MFC 本地项目。',
-    links: [
-      { to: '/codegen', label: '代码骨架' },
-      { to: '/designer', label: '界面设计' },
-      { to: '/integration', label: '集成向导' },
-      { to: '/build-checklist', label: '构建清单' },
-      { to: '/troubleshooting', label: '故障排查' },
-    ],
-  },
-  {
-    title: '复习提升',
-    desc: '把题库、术语、错题和图解串成可持续复盘。',
-    links: [
-      { to: '/review', label: '复习训练' },
-      { to: '/planner', label: '学习计划' },
-      { to: '/exam', label: '答辩训练' },
-      { to: '/diagrams', label: '图解中心' },
-      { to: '/glossary', label: '术语速查' },
-    ],
-  },
-  {
-    title: '交付资料',
-    desc: '整理学习记录、作品集、演示稿和项目证明材料。',
-    links: [
-      { to: '/portfolio', label: '作品集' },
-      { to: '/demo-script', label: '演示稿' },
-      { to: '/reports', label: '学习报告' },
-      { to: '/dashboard', label: '仪表盘' },
-      { to: '/notes', label: '学习笔记' },
-      { to: '/search', label: '全站搜索' },
-      { to: '/resources', label: '资源中心' },
-      { to: '/comics', label: '知识漫画' },
-    ],
-  },
 ];
 
 const updates = [
@@ -90,13 +44,13 @@ export function Home() {
           <h2>MFC 通用工具开发训练营</h2>
           <p>从串口、TCP、HTTP 到 SQLite/INI，用 C++ 和 MFC 构建一个真正能用的工业通信调试工具。</p>
           <div className="home-quick-actions">
-            {quickActions.map((action) => (
+            {homePrimaryActions.map((action) => (
               <Link
                 className={`button ${action.tone === 'primary' ? 'button-primary' : 'button-ghost'}`}
                 to={action.to}
                 key={action.to}
               >
-                {action.label}
+                {action.label ?? action.text}
               </Link>
             ))}
           </div>
@@ -219,10 +173,10 @@ export function Home() {
         <summary>更多工具与交付能力</summary>
         <p className="muted feature-center-note">完整入口默认折叠，避免移动端首页被工具区占满。</p>
         <div className="feature-group-grid">
-          {featureGroups.map((group) => (
-            <article className="card feature-group-card" key={group.title}>
-              <h3>{group.title}</h3>
-              <p className="muted">{group.desc}</p>
+          {toolNavGroups.map((group) => (
+            <article className="card feature-group-card" key={group.label}>
+              <h3>{group.label}</h3>
+              <p className="muted">统一入口来自导航配置，避免首页、侧边栏和仪表盘重复维护。</p>
               <div className="feature-link-list">
                 {group.links.map((link) => (
                   <Link to={link.to} key={link.to}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { primaryNavGroups } from '../../config/navigation';
+import { mainHeaderNav } from '../../config/navigation';
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -22,17 +22,10 @@ export function Header() {
         {open ? '收起菜单' : '功能菜单'}
       </button>
       <nav id="site-navigation" className={`top-nav ${open ? 'open' : ''}`}>
-        {primaryNavGroups.map((group) => (
-          <div className="nav-group" key={group.label}>
-            <span className="nav-group-title">{group.label}</span>
-            <div className="nav-group-links">
-              {group.links.map((link) => (
-                <NavLink key={link.to} to={link.to} onClick={() => setOpen(false)}>
-                  {link.text}
-                </NavLink>
-              ))}
-            </div>
-          </div>
+        {mainHeaderNav.map((link) => (
+          <NavLink key={link.to} to={link.to} onClick={() => setOpen(false)} end={link.to === '/'}>
+            {link.text}
+          </NavLink>
         ))}
       </nav>
     </header>

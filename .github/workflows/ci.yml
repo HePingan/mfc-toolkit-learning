@@ -40,6 +40,9 @@ jobs:
       - name: Route verification
         run: npm run verify:routes
 
+      - name: Navigation verification
+        run: npm run verify:navigation
+
       - name: Mobile verification
         run: |
           npm run preview -- --host 127.0.0.1 --port 4174 > /tmp/mfc-preview.log 2>&1 &

@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { modules } from '../../data/modules';
-import { toolLinks } from '../../config/navigation';
+import { toolNavGroups } from '../../config/navigation';
 
 export function Sidebar() {
   return (
@@ -9,20 +9,25 @@ export function Sidebar() {
         <summary>导航与工具</summary>
         <section className="sidebar-tools" aria-label="常用工具">
           <div className="sidebar-title">常用工具</div>
-          <div className="side-tool-grid">
-            {toolLinks.map((link) => (
-              <NavLink
-                className="side-tool-chip"
-                to={link.to}
-                key={link.to}
-                aria-label={link.label}
-              >
-                <span aria-hidden="true">{link.icon}</span>
-                <b>{link.short}</b>
-                <em>{link.label}</em>
-              </NavLink>
-            ))}
-          </div>
+          {toolNavGroups.map((group) => (
+            <div className="sidebar-tool-group" key={group.label}>
+              <div className="sidebar-subtitle">{group.label}</div>
+              <div className="side-tool-grid">
+                {group.links.map((link) => (
+                  <NavLink
+                    className="side-tool-chip"
+                    to={link.to}
+                    key={link.to}
+                    aria-label={link.label}
+                  >
+                    <span aria-hidden="true">{link.icon}</span>
+                    <b>{link.short}</b>
+                    <em>{link.label}</em>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          ))}
         </section>
         <div className="sidebar-title module-title">课程模块</div>
         <div className="module-side-list">

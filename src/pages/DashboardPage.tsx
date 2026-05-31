@@ -9,7 +9,7 @@ import { Card } from '../components/ui/Card';
 import { AchievementsPanel } from '../components/progress/AchievementsPanel';
 import { achievementSummary } from '../data/achievements';
 import { downloadJson } from '../utils/download';
-import { toolLinks } from '../config/navigation';
+import { toolNavGroups } from '../config/navigation';
 
 export function DashboardPage() {
   const { progress, overallPercent, resetProgress, importProgress } = useProgress();
@@ -225,11 +225,18 @@ export function DashboardPage() {
       <Card className="dashboard-tools-card">
         <h3>全部工具</h3>
         <div className="dashboard-tool-grid">
-          {toolLinks.map((tool) => (
-            <Link to={tool.to} key={tool.to}>
-              <span>{tool.icon}</span>
-              <b>{tool.label}</b>
-            </Link>
+          {toolNavGroups.map((group) => (
+            <div className="dashboard-tool-group" key={group.label}>
+              <strong>{group.label}</strong>
+              <div className="dashboard-tool-group-links">
+                {group.links.map((tool) => (
+                  <Link to={tool.to} key={tool.to}>
+                    <span>{tool.icon}</span>
+                    <b>{tool.label}</b>
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </Card>

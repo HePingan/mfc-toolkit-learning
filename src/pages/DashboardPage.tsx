@@ -4,7 +4,7 @@ import { modules } from '../data/modules';
 import { labs } from '../data/labs';
 import { quizzes, getQuestion } from '../data/quizzes';
 import { useProgress } from '../hooks/useProgress';
-import { masteryScore, ProgressState } from '../utils/progress';
+import { exportProgress, importProgressPayload, masteryScore } from '../utils/progress';
 import { Card } from '../components/ui/Card';
 import { AchievementsPanel } from '../components/progress/AchievementsPanel';
 import { achievementSummary } from '../data/achievements';
@@ -56,21 +56,16 @@ export function DashboardPage() {
         ? '先清错题并补答辩证据'
         : '补齐演示证据和本地验收截图';
   const summary = useMemo(
-    () => ({
-      exportedAt: new Date().toISOString(),
-      overallPercent,
-      progress,
-    }),
+    () => ({ ...exportProgress(progress), overallPercent }),
     [overallPercent, progress],
   );
 
   const handleImport = () => {
     try {
-      const parsed = JSON.parse(importText) as { progress?: ProgressState } | ProgressState;
-      const next =
-        'progress' in parsed && parsed.progress ? parsed.progress : (parsed as ProgressState);
+      const parsed = JSON.parse(importText) as unknown;
+      const next = importProgressPayload(parsed);
       importProgress(next);
-      setMessage('进度导入成功。');
+      setMessage('进度导入成功，已自动规范化版本和字段。');
       setImportText('');
     } catch {
       setMessage('导入失败：JSON 格式不正确。');

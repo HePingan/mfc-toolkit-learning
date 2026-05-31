@@ -1,11 +1,24 @@
 import { useLocalStorage } from './useLocalStorage';
-import { storageKeys } from '../data/storageKeys';
-import { calculateOverall, defaultProgress, ProgressState, unique } from '../utils/progress';
+import { legacyStorageKeys, storageKeys } from '../data/storageKeys';
+import {
+  calculateOverall,
+  defaultProgress,
+  importProgressPayload,
+  isProgressState,
+  migrateProgress,
+  ProgressState,
+  unique,
+} from '../utils/progress';
 
 export function useProgress() {
   const [progress, setProgress] = useLocalStorage<ProgressState>(
     storageKeys.progress,
     defaultProgress,
+    {
+      validate: isProgressState,
+      migrate: migrateProgress,
+      legacyKeys: [...legacyStorageKeys.progress],
+    },
   );
   const markModule = (id: string) =>
     setProgress((current) => ({
@@ -37,7 +50,7 @@ export function useProgress() {
         : unique([...current.capstoneChecks, id]),
     }));
   const resetProgress = () => setProgress(defaultProgress);
-  const importProgress = (next: ProgressState) => setProgress({ ...defaultProgress, ...next });
+  const importProgress = (next: unknown) => setProgress(importProgressPayload(next));
   const togglePracticeTask = (id: string) => {
     setProgress((current) => {
       const completedPracticeTasks = current.completedPracticeTasks ?? [];

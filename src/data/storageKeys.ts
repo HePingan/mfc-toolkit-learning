@@ -12,3 +12,11 @@ export const storageKeys = {
   exam: 'mfc-toolkit-exam-v1',
   localIntegrationChecklist: 'mfc-local-integration-checklist-v1',
 } as const;
+
+export type StorageKeyName = keyof typeof storageKeys;
+export type StorageKey = (typeof storageKeys)[StorageKeyName];
+
+export const allStorageKeys = Object.values(storageKeys) as StorageKey[];
+export const legacyStorageKeys = {
+  progress: ['mfc-toolkit-progress-v1'],
+} as const;

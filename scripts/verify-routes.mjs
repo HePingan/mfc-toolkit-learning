@@ -81,16 +81,32 @@ async function check(url, expectHtml = false) {
   return body;
 }
 
+function assertBuiltIndex(html, url) {
+  if (html.includes('src="/src/')) {
+    throw new Error(`${url} is serving Vite dev index.html; expected built /assets bundle`);
+  }
+  if (!html.includes('type="module"') || !html.includes('/assets/index-')) {
+    throw new Error(`${url} does not reference a built module script under /assets`);
+  }
+  if (!html.includes('rel="stylesheet"') || !html.includes('/assets/index-')) {
+    throw new Error(`${url} does not reference a built stylesheet under /assets`);
+  }
+}
+
 try {
   if (!process.env.VERIFY_BASE_URL) await listen();
   const html = await check(`${baseUrl}/`, true);
+  assertBuiltIndex(html, `${baseUrl}/`);
   const assets = Array.from(
     html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g),
     (match) => match[1],
   );
   if (!assets.length) throw new Error('No built /assets references found in index.html');
 
-  for (const route of routes) await check(`${baseUrl}${route}`, true);
+  for (const route of routes) {
+    const routeHtml = await check(`${baseUrl}${route}`, true);
+    assertBuiltIndex(routeHtml, `${baseUrl}${route}`);
+  }
   for (const asset of assets) await check(`${baseUrl}${asset}`);
 
   console.log(`[verify:routes] OK ${routes.length} routes, ${assets.length} assets @ ${baseUrl}`);

@@ -1,4 +1,3 @@
-import JSZip from 'jszip';
 import { downloadBlob } from './download';
 
 export type ZipManifestFile = {
@@ -15,6 +14,7 @@ export async function downloadZipManifest(
   manifest: ZipManifest,
   filename = `${manifest.rootName}.zip`,
 ) {
+  const JSZip = (await import('jszip')) as unknown as typeof import('jszip');
   const zip = new JSZip();
   const root = zip.folder(manifest.rootName) ?? zip;
   manifest.files.forEach((file) => root.file(file.path, file.content));

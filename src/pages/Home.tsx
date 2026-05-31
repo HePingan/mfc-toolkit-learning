@@ -70,16 +70,23 @@ export function Home() {
     { label: '课程模块', value: modules.length, note: '从环境到综合项目' },
     { label: '交互实验', value: labs.length, note: '浏览器内模拟关键概念' },
     { label: '测验题库', value: quizzes.length, note: '每模块 12 题，含单选/多选/判断/代码/场景' },
-    { label: '当前进度', value: `${overallPercent}%`, note: `已完成 ${progress.completedModules.length} 个模块` },
+    {
+      label: '当前进度',
+      value: `${overallPercent}%`,
+      note: `已完成 ${progress.completedModules.length} 个模块`,
+    },
   ];
-  const nextModule = modules.find((module) => !progress.completedModules.includes(module.id)) ?? modules[0];
+  const nextModule =
+    modules.find((module) => !progress.completedModules.includes(module.id)) ?? modules[0];
   const androidTools = homeToolShortcuts.slice(0, 4);
 
   return (
     <div>
       <section className="hero hero-grid">
         <div>
-          <div className="eyebrow">C++ / MFC / Serial / TCP Socket / HTTP / SQLite / INI / 多线程</div>
+          <div className="eyebrow">
+            C++ / MFC / Serial / TCP Socket / HTTP / SQLite / INI / 多线程
+          </div>
           <h2>MFC 通用工具开发训练营</h2>
           <p>从串口、TCP、HTTP 到 SQLite/INI，用 C++ 和 MFC 构建一个真正能用的工业通信调试工具。</p>
           <div className="home-quick-actions">
@@ -94,14 +101,30 @@ export function Home() {
             ))}
           </div>
           <div className="badge-list">
-            {['深色工程风', '浏览器模拟', 'localStorage 进度', '最终项目验收'].map((item) => <span className="badge" key={item}>{item}</span>)}
+            {['深色工程风', '浏览器模拟', 'localStorage 进度', '最终项目验收'].map((item) => (
+              <span className="badge" key={item}>
+                {item}
+              </span>
+            ))}
           </div>
         </div>
         <div className="hero-console terminal">
-          <div><span>$</span> create MFC Toolkit Learning Path</div>
-          {valuePoints.map((item) => <div key={item}><span>✓</span> {item}</div>)}
-          <div><span>→</span> 下一步：按路线完成模块、实验、测验和 Capstone 自评</div>
-          {updates.map((item) => <div key={item}><span>✦</span> {item}</div>)}
+          <div>
+            <span>$</span> create MFC Toolkit Learning Path
+          </div>
+          {valuePoints.map((item) => (
+            <div key={item}>
+              <span>✓</span> {item}
+            </div>
+          ))}
+          <div>
+            <span>→</span> 下一步：按路线完成模块、实验、测验和 Capstone 自评
+          </div>
+          {updates.map((item) => (
+            <div key={item}>
+              <span>✦</span> {item}
+            </div>
+          ))}
         </div>
       </section>
 
@@ -113,16 +136,26 @@ export function Home() {
         </div>
         <div className="android-progress-mini">
           <span>总进度 {overallPercent}%</span>
-          <div className="progress-bar"><i style={{ width: `${overallPercent}%` }} /></div>
+          <div className="progress-bar">
+            <i style={{ width: `${overallPercent}%` }} />
+          </div>
         </div>
         <div className="android-home-actions">
-          <Link className="button button-primary" to={`/modules/${nextModule.id}`}>继续学习</Link>
-          <Link className="button button-ghost" to="/labs">进入实验</Link>
+          <Link className="button button-primary" to={`/modules/${nextModule.id}`}>
+            继续学习
+          </Link>
+          <Link className="button button-ghost" to="/labs">
+            进入实验
+          </Link>
         </div>
       </section>
 
       <section className="android-tool-chips" aria-label="安卓快捷工具">
-        {androidTools.map((tool) => <Link to={tool.to} key={tool.to}>{tool.short}</Link>)}
+        {androidTools.map((tool) => (
+          <Link to={tool.to} key={tool.to}>
+            {tool.short}
+          </Link>
+        ))}
         <Link to="/dashboard">更多</Link>
       </section>
 
@@ -155,9 +188,13 @@ export function Home() {
         <div>
           <div className="eyebrow">Learning Path</div>
           <h2>按“工具开发”顺序学习</h2>
-          <p className="muted">先理解工具全貌，再逐步拆解串口、网络、MFC、C++ 核心、数据存储，最后回到完整项目。</p>
+          <p className="muted">
+            先理解工具全貌，再逐步拆解串口、网络、MFC、C++ 核心、数据存储，最后回到完整项目。
+          </p>
         </div>
-        <Link className="button button-ghost" to="/capstone">查看最终项目</Link>
+        <Link className="button button-ghost" to="/capstone">
+          查看最终项目
+        </Link>
       </section>
       <section className="android-module-list" aria-label="安卓课程模块列表">
         {modules.map((module, index) => (
@@ -172,7 +209,11 @@ export function Home() {
           </Link>
         ))}
       </section>
-      <section className="card-grid desktop-module-grid">{modules.map((module) => <ModuleCard key={module.id} module={module} />)}</section>
+      <section className="card-grid desktop-module-grid">
+        {modules.map((module) => (
+          <ModuleCard key={module.id} module={module} />
+        ))}
+      </section>
 
       <details className="feature-center feature-center-collapsed">
         <summary>更多工具与交付能力</summary>
@@ -184,7 +225,9 @@ export function Home() {
               <p className="muted">{group.desc}</p>
               <div className="feature-link-list">
                 {group.links.map((link) => (
-                  <Link to={link.to} key={link.to}>{link.label}</Link>
+                  <Link to={link.to} key={link.to}>
+                    {link.label}
+                  </Link>
                 ))}
               </div>
             </article>

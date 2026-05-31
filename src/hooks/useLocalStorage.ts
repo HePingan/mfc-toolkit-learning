@@ -10,7 +10,11 @@ function resolveNextValue<T>(next: SetStateAction<T>, previous: T): T {
   return typeof next === 'function' ? (next as (value: T) => T)(previous) : next;
 }
 
-export function useLocalStorage<T>(key: string, initialValue: T, options: UseLocalStorageOptions<T> = {}) {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  options: UseLocalStorageOptions<T> = {},
+) {
   const [value, setValue] = useState<T>(() => {
     try {
       const stored = window.localStorage.getItem(key);

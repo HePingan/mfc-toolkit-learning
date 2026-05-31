@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom';
-import { LearningPathDiagram, CapstoneArchitectureDiagram, LabMatrixDiagram, ModuleConceptDiagram, ToolExecutionPipelineDiagram, VisualStudioMigrationDiagram } from '../components/course/Diagrams';
+import {
+  LearningPathDiagram,
+  CapstoneArchitectureDiagram,
+  LabMatrixDiagram,
+  ModuleConceptDiagram,
+  ToolExecutionPipelineDiagram,
+  VisualStudioMigrationDiagram,
+} from '../components/course/Diagrams';
 import { Card } from '../components/ui/Card';
 import { modules } from '../data/modules';
 
@@ -9,12 +16,22 @@ export function DiagramsPage() {
       <section className="hero diagrams-hero">
         <div className="eyebrow">Visual Knowledge Hub</div>
         <h2>MFC 工具开发图解中心</h2>
-        <p>把学习路线、模块知识、实验映射、项目架构、本地迁移和执行链路集中到一页，适合复习、讲解和做项目说明。</p>
+        <p>
+          把学习路线、模块知识、实验映射、项目架构、本地迁移和执行链路集中到一页，适合复习、讲解和做项目说明。
+        </p>
         <div className="form-row">
-          <Link className="button button-primary" to="/roadmap">回到学习路线</Link>
-          <Link className="button button-ghost" to="/practice">本地实战桥接</Link>
-          <Link className="button button-ghost" to="/codegen">生成代码骨架</Link>
-          <Link className="button button-ghost" to="/reports">导出学习报告</Link>
+          <Link className="button button-primary" to="/roadmap">
+            回到学习路线
+          </Link>
+          <Link className="button button-ghost" to="/practice">
+            本地实战桥接
+          </Link>
+          <Link className="button button-ghost" to="/codegen">
+            生成代码骨架
+          </Link>
+          <Link className="button button-ghost" to="/reports">
+            导出学习报告
+          </Link>
         </div>
         <div className="badge-list">
           <span className="badge">可视化复盘</span>
@@ -55,8 +72,14 @@ export function DiagramsPage() {
           <div key={module.id}>
             <ModuleConceptDiagram module={module} />
             <div className="diagram-card-actions">
-              <Link className="button button-ghost" to={`/modules/${module.id}`}>学习 {module.title}</Link>
-              {module.localPractice?.relatedRoute && <Link className="button button-ghost" to={module.localPractice.relatedRoute}>本地实践</Link>}
+              <Link className="button button-ghost" to={`/modules/${module.id}`}>
+                学习 {module.title}
+              </Link>
+              {module.localPractice?.relatedRoute && (
+                <Link className="button button-ghost" to={module.localPractice.relatedRoute}>
+                  本地实践
+                </Link>
+              )}
             </div>
           </div>
         ))}
@@ -66,7 +89,10 @@ export function DiagramsPage() {
         <div>
           <div className="eyebrow">Practice Flow</div>
           <h2>从网页模拟到本地 MFC 的迁移图</h2>
-          <p className="muted">强调边界：网页只做模拟、图解和代码模板；真实串口/TCP/SQLite/MFC 编译要回到 Windows + Visual Studio。</p>
+          <p className="muted">
+            强调边界：网页只做模拟、图解和代码模板；真实串口/TCP/SQLite/MFC 编译要回到 Windows +
+            Visual Studio。
+          </p>
         </div>
       </section>
       <VisualStudioMigrationDiagram />
@@ -88,9 +114,15 @@ export function DiagramsPage() {
           <li>遇到编译/链接/控件 ID 问题，优先进入集成向导和构建清单逐项排查。</li>
         </ul>
         <div className="form-row">
-          <Link className="button" to="/integration">打开集成向导</Link>
-          <Link className="button button-ghost" to="/build-checklist">打开构建清单</Link>
-          <Link className="button button-ghost" to="/troubleshooting">故障排查训练</Link>
+          <Link className="button" to="/integration">
+            打开集成向导
+          </Link>
+          <Link className="button button-ghost" to="/build-checklist">
+            打开构建清单
+          </Link>
+          <Link className="button button-ghost" to="/troubleshooting">
+            故障排查训练
+          </Link>
         </div>
       </Card>
     </div>

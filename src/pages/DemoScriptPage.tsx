@@ -30,9 +30,24 @@ type DemoStep = {
 
 const modeOptions: Array<{ id: DemoMode; label: string; minutes: number; focus: string }> = [
   { id: '3min', label: '3 分钟快速版', minutes: 3, focus: '只讲目标、架构、1 个核心模块和结果。' },
-  { id: '5min', label: '5 分钟面试版', minutes: 5, focus: '讲清技术选型、模块拆分、稳定性和个人贡献。' },
-  { id: '10min', label: '10 分钟项目验收版', minutes: 10, focus: '完整展示 UI、通讯、数据保存、日志、排错和验收。' },
-  { id: '15min', label: '15 分钟课程设计汇报版', minutes: 15, focus: '补充学习路线、实验迁移、代码结构和扩展方向。' },
+  {
+    id: '5min',
+    label: '5 分钟面试版',
+    minutes: 5,
+    focus: '讲清技术选型、模块拆分、稳定性和个人贡献。',
+  },
+  {
+    id: '10min',
+    label: '10 分钟项目验收版',
+    minutes: 10,
+    focus: '完整展示 UI、通讯、数据保存、日志、排错和验收。',
+  },
+  {
+    id: '15min',
+    label: '15 分钟课程设计汇报版',
+    minutes: 15,
+    focus: '补充学习路线、实验迁移、代码结构和扩展方向。',
+  },
 ];
 
 function pickSteps(mode: DemoMode): DemoStep[] {
@@ -110,8 +125,14 @@ function pickSteps(mode: DemoMode): DemoStep[] {
       route: '/exam',
     },
   ];
-  if (mode === '3min') return base.filter((step) => ['opening', 'architecture', 'communication', 'stability', 'closing'].includes(step.id));
-  if (mode === '5min') return base.filter((step) => ['opening', 'architecture', 'ui', 'communication', 'stability', 'closing'].includes(step.id));
+  if (mode === '3min')
+    return base.filter((step) =>
+      ['opening', 'architecture', 'communication', 'stability', 'closing'].includes(step.id),
+    );
+  if (mode === '5min')
+    return base.filter((step) =>
+      ['opening', 'architecture', 'ui', 'communication', 'stability', 'closing'].includes(step.id),
+    );
   if (mode === '10min') return base.filter((step) => step.id !== 'storage' || true);
   return base;
 }
@@ -139,8 +160,10 @@ export function DemoScriptPage() {
   const evidenceReadyCount = steps.length - missingEvidenceSteps.length;
   const script = formatScript(state, steps);
 
-  const updateEvidence = (id: string, value: string) => setState({ ...state, customEvidence: { ...state.customEvidence, [id]: value } });
-  const updateRehearsalNote = (id: string, value: string) => setState({ ...state, rehearsalNotes: { ...(state.rehearsalNotes ?? {}), [id]: value } });
+  const updateEvidence = (id: string, value: string) =>
+    setState({ ...state, customEvidence: { ...state.customEvidence, [id]: value } });
+  const updateRehearsalNote = (id: string, value: string) =>
+    setState({ ...state, rehearsalNotes: { ...(state.rehearsalNotes ?? {}), [id]: value } });
   const fillEvidenceTemplate = (id: string, evidence: string[]) => {
     const current = state.customEvidence[id]?.trim();
     const template = evidence.map((item) => `- ${item}：待补充截图/路径/日志`).join('\n');
@@ -149,35 +172,85 @@ export function DemoScriptPage() {
   const jumpToFirstGap = () => {
     if (missingEvidenceSteps[0]) setActiveId(missingEvidenceSteps[0].id);
   };
-  const toggleDone = (id: string) => setState({ ...state, completed: state.completed.includes(id) ? state.completed.filter((item) => item !== id) : [...state.completed, id] });
+  const toggleDone = (id: string) =>
+    setState({
+      ...state,
+      completed: state.completed.includes(id)
+        ? state.completed.filter((item) => item !== id)
+        : [...state.completed, id],
+    });
 
   return (
     <div>
       <section className="hero demo-hero">
         <div className="eyebrow">Demo Script · Presentation Flow</div>
         <h2>项目演示脚本 / 录屏讲解稿生成器</h2>
-        <p>把代码骨架、界面设计、集成向导、构建清单、答辩训练和作品集串成一份可直接用于验收、面试、录屏或 README 的讲解稿。</p>
+        <p>
+          把代码骨架、界面设计、集成向导、构建清单、答辩训练和作品集串成一份可直接用于验收、面试、录屏或
+          README 的讲解稿。
+        </p>
         <div className="form-row">
-          <Link className="button button-primary" to="/portfolio">作品集</Link>
-          <Link className="button button-ghost" to="/exam">答辩训练</Link>
-          <Link className="button button-ghost" to="/reports">学习报告</Link>
-          <Button className="button-ghost" onClick={() => downloadMarkdown('mfc-demo-script.md', script)}>导出演示稿 Markdown</Button>
+          <Link className="button button-primary" to="/portfolio">
+            作品集
+          </Link>
+          <Link className="button button-ghost" to="/exam">
+            答辩训练
+          </Link>
+          <Link className="button button-ghost" to="/reports">
+            学习报告
+          </Link>
+          <Button
+            className="button-ghost"
+            onClick={() => downloadMarkdown('mfc-demo-script.md', script)}
+          >
+            导出演示稿 Markdown
+          </Button>
         </div>
       </section>
 
       <section className="demo-summary-grid">
-        <Card><strong>{modeOptions.find((item) => item.id === state.mode)?.minutes}</strong><span>目标分钟</span><p className="muted">可按场景切换节奏</p></Card>
-        <Card><strong>{steps.length}</strong><span>演示步骤</span><p className="muted">目标、架构、通讯、稳定性、总结</p></Card>
-        <Card><strong>{totalMinutes.toFixed(1)}</strong><span>脚本估算</span><p className="muted">每步可按现场压缩</p></Card>
-        <Card><strong>{state.completed.length}</strong><span>已彩排</span><p className="muted">本地保存彩排状态</p></Card>
-        <Card><strong>{evidenceReadyCount}/{steps.length}</strong><span>证据已补</span><p className="muted">缺口会进入导出稿</p></Card>
+        <Card>
+          <strong>{modeOptions.find((item) => item.id === state.mode)?.minutes}</strong>
+          <span>目标分钟</span>
+          <p className="muted">可按场景切换节奏</p>
+        </Card>
+        <Card>
+          <strong>{steps.length}</strong>
+          <span>演示步骤</span>
+          <p className="muted">目标、架构、通讯、稳定性、总结</p>
+        </Card>
+        <Card>
+          <strong>{totalMinutes.toFixed(1)}</strong>
+          <span>脚本估算</span>
+          <p className="muted">每步可按现场压缩</p>
+        </Card>
+        <Card>
+          <strong>{state.completed.length}</strong>
+          <span>已彩排</span>
+          <p className="muted">本地保存彩排状态</p>
+        </Card>
+        <Card>
+          <strong>
+            {evidenceReadyCount}/{steps.length}
+          </strong>
+          <span>证据已补</span>
+          <p className="muted">缺口会进入导出稿</p>
+        </Card>
       </section>
-
 
       <Card className="demo-gap-card">
         <div className="diagram-head compact-head">
-          <div><div className="eyebrow">Evidence Gap</div><h3>证据缺口雷达</h3></div>
-          <Button className="button-ghost" onClick={jumpToFirstGap} disabled={!missingEvidenceSteps.length}>跳到第一个缺口</Button>
+          <div>
+            <div className="eyebrow">Evidence Gap</div>
+            <h3>证据缺口雷达</h3>
+          </div>
+          <Button
+            className="button-ghost"
+            onClick={jumpToFirstGap}
+            disabled={!missingEvidenceSteps.length}
+          >
+            跳到第一个缺口
+          </Button>
         </div>
         {missingEvidenceSteps.length ? (
           <div className="demo-gap-list">
@@ -188,24 +261,48 @@ export function DemoScriptPage() {
               </button>
             ))}
           </div>
-        ) : <p className="success-text">所有演示步骤都已填写补充证据，可以导出演示稿并开始彩排。</p>}
+        ) : (
+          <p className="success-text">所有演示步骤都已填写补充证据，可以导出演示稿并开始彩排。</p>
+        )}
       </Card>
 
       <Card className="demo-control-card">
         <div className="diagram-head compact-head">
-          <div><div className="eyebrow">Script Settings</div><h3>演示场景设置</h3></div>
+          <div>
+            <div className="eyebrow">Script Settings</div>
+            <h3>演示场景设置</h3>
+          </div>
           <span className="badge">浏览器生成 · 本地证据补充</span>
         </div>
         <div className="demo-settings-grid">
-          <label>项目名称
-            <input value={state.projectName} onChange={(event) => setState({ ...state, projectName: event.target.value })} />
+          <label>
+            项目名称
+            <input
+              value={state.projectName}
+              onChange={(event) => setState({ ...state, projectName: event.target.value })}
+            />
           </label>
-          <label>听众对象
-            <input value={state.audience} onChange={(event) => setState({ ...state, audience: event.target.value })} />
+          <label>
+            听众对象
+            <input
+              value={state.audience}
+              onChange={(event) => setState({ ...state, audience: event.target.value })}
+            />
           </label>
-          <label>脚本版本
-            <select value={state.mode} onChange={(event) => { setState({ ...state, mode: event.target.value as DemoMode }); setActiveId('opening'); }}>
-              {modeOptions.map((option) => <option value={option.id} key={option.id}>{option.label} · {option.focus}</option>)}
+          <label>
+            脚本版本
+            <select
+              value={state.mode}
+              onChange={(event) => {
+                setState({ ...state, mode: event.target.value as DemoMode });
+                setActiveId('opening');
+              }}
+            >
+              {modeOptions.map((option) => (
+                <option value={option.id} key={option.id}>
+                  {option.label} · {option.focus}
+                </option>
+              ))}
             </select>
           </label>
         </div>
@@ -214,47 +311,122 @@ export function DemoScriptPage() {
       <section className="demo-layout">
         <Card className="demo-step-list">
           <div className="eyebrow">Run of Show</div>
-          {steps.map((step, index) => <button key={step.id} className={active.id === step.id ? 'active' : state.completed.includes(step.id) ? 'done' : ''} onClick={() => setActiveId(step.id)}><span>{index + 1}. {step.title}</span><small>{step.minutes} 分钟 · {state.completed.includes(step.id) ? '已彩排' : '待准备'}</small></button>)}
+          {steps.map((step, index) => (
+            <button
+              key={step.id}
+              className={
+                active.id === step.id ? 'active' : state.completed.includes(step.id) ? 'done' : ''
+              }
+              onClick={() => setActiveId(step.id)}
+            >
+              <span>
+                {index + 1}. {step.title}
+              </span>
+              <small>
+                {step.minutes} 分钟 · {state.completed.includes(step.id) ? '已彩排' : '待准备'}
+              </small>
+            </button>
+          ))}
         </Card>
 
         <Card className="demo-step-detail">
           <div className="diagram-head compact-head">
-            <div><div className="eyebrow">Step Script</div><h3>{active.title}</h3></div>
-            <Link className="button button-ghost" to={active.route}>打开关联页面</Link>
+            <div>
+              <div className="eyebrow">Step Script</div>
+              <h3>{active.title}</h3>
+            </div>
+            <Link className="button button-ghost" to={active.route}>
+              打开关联页面
+            </Link>
           </div>
-          <div className="demo-talk-block"><strong>讲解词</strong><p>{active.talk}</p></div>
+          <div className="demo-talk-block">
+            <strong>讲解词</strong>
+            <p>{active.talk}</p>
+          </div>
           <div className="demo-two-col">
-            <div><strong>屏幕展示</strong><ul>{active.show.map((item) => <li key={item}>{item}</li>)}</ul></div>
-            <div><strong>证据清单</strong><ul>{active.evidence.map((item) => <li key={item}>{item}</li>)}</ul></div>
+            <div>
+              <strong>屏幕展示</strong>
+              <ul>
+                {active.show.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <strong>证据清单</strong>
+              <ul>
+                {active.evidence.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <label className="field-label">我的补充证据 / 截图文件名 / 源码路径
-            <textarea value={state.customEvidence[active.id] ?? ''} onChange={(event) => updateEvidence(active.id, event.target.value)} rows={6} placeholder="例如：screenshots/serial-send.png，SerialManager.cpp 第 80 行，运行日志 2026-xx-xx..." />
+          <label className="field-label">
+            我的补充证据 / 截图文件名 / 源码路径
+            <textarea
+              value={state.customEvidence[active.id] ?? ''}
+              onChange={(event) => updateEvidence(active.id, event.target.value)}
+              rows={6}
+              placeholder="例如：screenshots/serial-send.png，SerialManager.cpp 第 80 行，运行日志 2026-xx-xx..."
+            />
           </label>
-          <label className="field-label">证据缺口 / 彩排改进
-            <textarea value={(state.rehearsalNotes ?? {})[active.id] ?? ''} onChange={(event) => updateRehearsalNote(active.id, event.target.value)} rows={4} placeholder="例如：缺少 TCP 断线重连日志；下次彩排需要先打开串口虚拟设备..." />
+          <label className="field-label">
+            证据缺口 / 彩排改进
+            <textarea
+              value={(state.rehearsalNotes ?? {})[active.id] ?? ''}
+              onChange={(event) => updateRehearsalNote(active.id, event.target.value)}
+              rows={4}
+              placeholder="例如：缺少 TCP 断线重连日志；下次彩排需要先打开串口虚拟设备..."
+            />
           </label>
           <div className="form-row">
-            <Button className="button-ghost" onClick={() => fillEvidenceTemplate(active.id, active.evidence)}>生成证据待办</Button>
-            <Button onClick={() => toggleDone(active.id)}>{state.completed.includes(active.id) ? '取消彩排' : '标记已彩排'}</Button>
+            <Button
+              className="button-ghost"
+              onClick={() => fillEvidenceTemplate(active.id, active.evidence)}
+            >
+              生成证据待办
+            </Button>
+            <Button onClick={() => toggleDone(active.id)}>
+              {state.completed.includes(active.id) ? '取消彩排' : '标记已彩排'}
+            </Button>
           </div>
         </Card>
       </section>
 
       <Card className={`demo-preview-card ${previewOpen ? 'is-open' : 'is-collapsed'}`}>
         <div className="diagram-head compact-head">
-          <div><div className="eyebrow">Markdown Preview</div><h3>导出预览</h3></div>
+          <div>
+            <div className="eyebrow">Markdown Preview</div>
+            <h3>导出预览</h3>
+          </div>
           <div className="form-row preview-actions">
-            <Button className="button-ghost" onClick={() => setPreviewOpen((value) => !value)}>{previewOpen ? '收起预览' : '展开预览'}</Button>
-            <Button className="button-ghost" onClick={() => downloadMarkdown('mfc-demo-script.md', script)}>下载 Markdown</Button>
+            <Button className="button-ghost" onClick={() => setPreviewOpen((value) => !value)}>
+              {previewOpen ? '收起预览' : '展开预览'}
+            </Button>
+            <Button
+              className="button-ghost"
+              onClick={() => downloadMarkdown('mfc-demo-script.md', script)}
+            >
+              下载 Markdown
+            </Button>
           </div>
         </div>
-        {previewOpen ? <pre>{script}</pre> : <p className="muted">移动端默认收起长演示稿，先专注补证据和彩排；需要检查全文时再展开。</p>}
+        {previewOpen ? (
+          <pre>{script}</pre>
+        ) : (
+          <p className="muted">
+            移动端默认收起长演示稿，先专注补证据和彩排；需要检查全文时再展开。
+          </p>
+        )}
       </Card>
 
       <Card className="demo-boundary-card">
         <div className="eyebrow">Presentation Boundary</div>
         <h3>讲解稿不是运行证明</h3>
-        <p>这个页面只生成演示流程和话术。真正用于验收或面试时，请补充 Windows + Visual Studio + MFC 本地工程的截图、编译结果、源码、串口/TCP/HTTP 日志、SQLite/INI 文件和故障复现记录。</p>
+        <p>
+          这个页面只生成演示流程和话术。真正用于验收或面试时，请补充 Windows + Visual Studio + MFC
+          本地工程的截图、编译结果、源码、串口/TCP/HTTP 日志、SQLite/INI 文件和故障复现记录。
+        </p>
       </Card>
     </div>
   );

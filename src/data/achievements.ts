@@ -16,10 +16,13 @@ export type Achievement = {
 };
 
 const quizModuleIds = Array.from(new Set(quizzes.map((quiz) => quiz.moduleId)));
-const highQuizScoreCount = (progress: ProgressState, minScore: number) => Object.values(progress.quizScores).filter((score) => score >= minScore).length;
+const highQuizScoreCount = (progress: ProgressState, minScore: number) =>
+  Object.values(progress.quizScores).filter((score) => score >= minScore).length;
 const completedAllLabsOfModule = (progress: ProgressState, moduleId: string) => {
   const moduleLabs = labs.filter((lab) => lab.moduleId === moduleId);
-  return moduleLabs.length > 0 && moduleLabs.every((lab) => progress.completedLabs.includes(lab.id));
+  return (
+    moduleLabs.length > 0 && moduleLabs.every((lab) => progress.completedLabs.includes(lab.id))
+  );
 };
 const capstoneTotal = 19;
 
@@ -31,7 +34,11 @@ export const achievements: Achievement[] = [
     category: '入门',
     description: '已经开始使用学习站并完成第一个学习动作。',
     requirement: '完成任意模块、实验或测验。',
-    evaluate: (progress) => progress.completedModules.length + progress.completedLabs.length + Object.keys(progress.quizScores).length > 0,
+    evaluate: (progress) =>
+      progress.completedModules.length +
+        progress.completedLabs.length +
+        Object.keys(progress.quizScores).length >
+      0,
   },
   {
     id: 'module-collector',
@@ -49,7 +56,8 @@ export const achievements: Achievement[] = [
     category: '模块',
     description: '完成全部课程模块，具备进入最终项目的知识基础。',
     requirement: `完成全部 ${modules.length} 个模块。`,
-    evaluate: (progress) => modules.every((module) => progress.completedModules.includes(module.id)),
+    evaluate: (progress) =>
+      modules.every((module) => progress.completedModules.includes(module.id)),
   },
   {
     id: 'serial-starter',
@@ -139,7 +147,8 @@ export const achievements: Achievement[] = [
     category: '测验',
     description: '完成全部模块测验，形成全课程知识闭环。',
     requirement: `完成全部 ${quizModuleIds.length} 个模块测验。`,
-    evaluate: (progress) => quizModuleIds.every((moduleId) => progress.quizScores[moduleId] !== undefined),
+    evaluate: (progress) =>
+      quizModuleIds.every((moduleId) => progress.quizScores[moduleId] !== undefined),
   },
   {
     id: 'wrong-zero',
@@ -148,7 +157,8 @@ export const achievements: Achievement[] = [
     category: '复习',
     description: '当前错题本为空，说明最近一轮复习状态良好。',
     requirement: '错题本数量为 0，且至少完成一个测验。',
-    evaluate: (progress) => Object.keys(progress.quizScores).length > 0 && progress.wrongQuestions.length === 0,
+    evaluate: (progress) =>
+      Object.keys(progress.quizScores).length > 0 && progress.wrongQuestions.length === 0,
   },
   {
     id: 'capstone-architect',
@@ -171,7 +181,10 @@ export const achievements: Achievement[] = [
 ];
 
 export function evaluateAchievements(progress: ProgressState) {
-  return achievements.map((achievement) => ({ ...achievement, unlocked: achievement.evaluate(progress) }));
+  return achievements.map((achievement) => ({
+    ...achievement,
+    unlocked: achievement.evaluate(progress),
+  }));
 }
 
 export function achievementSummary(progress: ProgressState) {

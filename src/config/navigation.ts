@@ -77,7 +77,18 @@ export const toolLinks: NavLinkConfig[] = [
   { to: '/demo-script', icon: '🎬', short: '演示', label: '演示稿', text: '演示' },
 ];
 
-export const homeToolShortcuts = toolLinks.filter((link) => !['/delivery', '/submit-rehearsal', '/evidence', '/review', '/planner', '/portfolio', '/demo-script'].includes(link.to));
+export const homeToolShortcuts = toolLinks.filter(
+  (link) =>
+    ![
+      '/delivery',
+      '/submit-rehearsal',
+      '/evidence',
+      '/review',
+      '/planner',
+      '/portfolio',
+      '/demo-script',
+    ].includes(link.to),
+);
 
 export const bottomTabs = [
   { to: '/', icon: '⌂', label: '首页' },

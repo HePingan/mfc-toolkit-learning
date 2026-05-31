@@ -1,7 +1,10 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; message: string }> {
+export class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean; message: string }
+> {
   state = { hasError: false, message: '' };
 
   static getDerivedStateFromError(error: Error) {
@@ -22,8 +25,12 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
           <p>React 运行时出现异常，已阻止白屏。请刷新页面，或回到首页继续学习。</p>
           {this.state.message && <pre className="terminal">{this.state.message}</pre>}
           <div className="form-row">
-            <button className="button" onClick={() => window.location.reload()}>刷新页面</button>
-            <Link className="button button-ghost" to="/">返回首页</Link>
+            <button className="button" onClick={() => window.location.reload()}>
+              刷新页面
+            </button>
+            <Link className="button button-ghost" to="/">
+              返回首页
+            </Link>
           </div>
         </section>
       </main>

@@ -7,7 +7,15 @@ type NodeTone = 'cyan' | 'purple' | 'green' | 'amber' | 'rose';
 
 const toneByIndex: NodeTone[] = ['cyan', 'purple', 'green', 'amber', 'rose'];
 
-function DiagramNode({ title, caption, tone = 'cyan' }: { title: string; caption?: string; tone?: NodeTone }) {
+function DiagramNode({
+  title,
+  caption,
+  tone = 'cyan',
+}: {
+  title: string;
+  caption?: string;
+  tone?: NodeTone;
+}) {
   return (
     <div className={`diagram-node tone-${tone}`}>
       <strong>{title}</strong>
@@ -17,7 +25,11 @@ function DiagramNode({ title, caption, tone = 'cyan' }: { title: string; caption
 }
 
 function Arrow() {
-  return <span className="diagram-arrow" aria-hidden="true">→</span>;
+  return (
+    <span className="diagram-arrow" aria-hidden="true">
+      →
+    </span>
+  );
 }
 
 export function LearningPathDiagram() {
@@ -43,12 +55,19 @@ export function LearningPathDiagram() {
       <div className="path-diagram" aria-label="学习路径图">
         {steps.map((step, index) => (
           <div className="path-step" key={step.title}>
-            <DiagramNode title={`${index + 1}. ${step.title}`} caption={step.caption} tone={toneByIndex[index % toneByIndex.length]} />
+            <DiagramNode
+              title={`${index + 1}. ${step.title}`}
+              caption={step.caption}
+              tone={toneByIndex[index % toneByIndex.length]}
+            />
             {index < steps.length - 1 && <Arrow />}
           </div>
         ))}
       </div>
-      <p className="muted">建议顺序：先理解全局，再分模块做浏览器模拟实验，最后回到 Windows + Visual Studio 完成真实 MFC 项目。</p>
+      <p className="muted">
+        建议顺序：先理解全局，再分模块做浏览器模拟实验，最后回到 Windows + Visual Studio 完成真实
+        MFC 项目。
+      </p>
     </Card>
   );
 }
@@ -98,13 +117,25 @@ export function ModuleConceptDiagram({ module }: { module: CourseModule }) {
       <div className="diagram-head compact-head">
         <div>
           <div className="eyebrow">Concept Diagram</div>
-          <h3>{module.icon} {module.title} 知识结构图</h3>
+          <h3>
+            {module.icon} {module.title} 知识结构图
+          </h3>
         </div>
         <span className="badge">{module.estimatedMinutes} 分钟</span>
       </div>
       <div className="radial-diagram" aria-label={`${module.title} 知识结构图`}>
-        <div className="radial-center"><strong>{visual.center}</strong><span>{module.subtitle}</span></div>
-        {visual.nodes.map((node, index) => <DiagramNode key={node} title={node} caption={module.concepts[index]} tone={toneByIndex[index % toneByIndex.length]} />)}
+        <div className="radial-center">
+          <strong>{visual.center}</strong>
+          <span>{module.subtitle}</span>
+        </div>
+        {visual.nodes.map((node, index) => (
+          <DiagramNode
+            key={node}
+            title={node}
+            caption={module.concepts[index]}
+            tone={toneByIndex[index % toneByIndex.length]}
+          />
+        ))}
       </div>
       <p className="muted">{visual.caption}</p>
     </Card>
@@ -128,13 +159,22 @@ export function LabMatrixDiagram() {
       <div className="lab-matrix-diagram" aria-label="实验矩阵图">
         {grouped.map(({ module }, index) => (
           <div className="lab-column" key={module.id}>
-            <Link to={`/modules/${module.id}`} className={`lab-column-head tone-${toneByIndex[index % toneByIndex.length]}`}>{module.icon} {module.title}</Link>
-            {labs.filter((lab) => lab.moduleId === module.id).map((lab) => (
-              <div className="lab-chip" key={lab.id}>
-                <strong>{lab.title}</strong>
-                <span>{lab.level} · {lab.summary}</span>
-              </div>
-            ))}
+            <Link
+              to={`/modules/${module.id}`}
+              className={`lab-column-head tone-${toneByIndex[index % toneByIndex.length]}`}
+            >
+              {module.icon} {module.title}
+            </Link>
+            {labs
+              .filter((lab) => lab.moduleId === module.id)
+              .map((lab) => (
+                <div className="lab-chip" key={lab.id}>
+                  <strong>{lab.title}</strong>
+                  <span>
+                    {lab.level} · {lab.summary}
+                  </span>
+                </div>
+              ))}
           </div>
         ))}
       </div>
@@ -205,22 +245,45 @@ export function VisualStudioMigrationDiagram() {
       <div className="migration-flow" aria-label="网页实验迁移到本地 Visual Studio 的流程图">
         {steps.map((step, index) => (
           <div className="migration-step" key={step.title}>
-            <DiagramNode title={`${index + 1}. ${step.title}`} caption={step.caption} tone={toneByIndex[index % toneByIndex.length]} />
+            <DiagramNode
+              title={`${index + 1}. ${step.title}`}
+              caption={step.caption}
+              tone={toneByIndex[index % toneByIndex.length]}
+            />
             {index < steps.length - 1 && <Arrow />}
           </div>
         ))}
       </div>
-      <p className="warning-text">边界提醒：网页只提供模拟、图解和模板；真实串口、Socket、SQLite 与 MFC 编译必须在 Windows + Visual Studio 本地完成。</p>
+      <p className="warning-text">
+        边界提醒：网页只提供模拟、图解和模板；真实串口、Socket、SQLite 与 MFC 编译必须在 Windows +
+        Visual Studio 本地完成。
+      </p>
     </Card>
   );
 }
 
 export function ToolExecutionPipelineDiagram() {
   const lanes = [
-    { title: '输入事件', items: ['按钮点击', '定时器', '串口回调', 'Socket 接收'], tone: 'cyan' as NodeTone },
-    { title: '调度层', items: ['Message Map', 'PostMessage', '任务队列', '错误分发'], tone: 'purple' as NodeTone },
-    { title: '业务模块', items: ['SerialManager', 'TcpClient', 'HttpClient', 'ConfigStore'], tone: 'green' as NodeTone },
-    { title: '状态输出', items: ['日志窗口', '状态栏', 'SQLite 历史', 'INI 配置'], tone: 'amber' as NodeTone },
+    {
+      title: '输入事件',
+      items: ['按钮点击', '定时器', '串口回调', 'Socket 接收'],
+      tone: 'cyan' as NodeTone,
+    },
+    {
+      title: '调度层',
+      items: ['Message Map', 'PostMessage', '任务队列', '错误分发'],
+      tone: 'purple' as NodeTone,
+    },
+    {
+      title: '业务模块',
+      items: ['SerialManager', 'TcpClient', 'HttpClient', 'ConfigStore'],
+      tone: 'green' as NodeTone,
+    },
+    {
+      title: '状态输出',
+      items: ['日志窗口', '状态栏', 'SQLite 历史', 'INI 配置'],
+      tone: 'amber' as NodeTone,
+    },
   ];
 
   return (
@@ -236,12 +299,17 @@ export function ToolExecutionPipelineDiagram() {
         {lanes.map((lane, index) => (
           <div className={`pipeline-lane tone-${lane.tone}`} key={lane.title}>
             <strong>{lane.title}</strong>
-            {lane.items.map((item) => <span key={item}>{item}</span>)}
+            {lane.items.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
             {index < lanes.length - 1 && <i aria-hidden="true">→</i>}
           </div>
         ))}
       </div>
-      <p className="muted">核心原则：耗时通讯和数据库操作不要直接堵在按钮事件中，应该进入工作线程/队列，再用安全方式把结果送回 UI 日志。</p>
+      <p className="muted">
+        核心原则：耗时通讯和数据库操作不要直接堵在按钮事件中，应该进入工作线程/队列，再用安全方式把结果送回
+        UI 日志。
+      </p>
     </Card>
   );
 }

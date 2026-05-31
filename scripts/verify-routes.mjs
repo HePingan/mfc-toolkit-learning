@@ -10,10 +10,33 @@ const baseUrl = process.env.VERIFY_BASE_URL || `http://127.0.0.1:${port}`;
 
 const moduleIds = ['overview', 'serial', 'network', 'mfc', 'cpp-core', 'storage', 'capstone'];
 const routes = [
-  '/', '/roadmap', '/labs', '/quiz', '/capstone', '/practice', '/codegen', '/designer',
-  '/integration', '/build-checklist', '/comics', '/diagrams', '/review', '/planner',
-  '/exam', '/portfolio', '/demo-script', '/delivery', '/submit-rehearsal', '/evidence',
-  '/dashboard', '/search', '/glossary', '/notes', '/troubleshooting', '/reports', '/resources',
+  '/',
+  '/roadmap',
+  '/labs',
+  '/quiz',
+  '/capstone',
+  '/practice',
+  '/codegen',
+  '/designer',
+  '/integration',
+  '/build-checklist',
+  '/comics',
+  '/diagrams',
+  '/review',
+  '/planner',
+  '/exam',
+  '/portfolio',
+  '/demo-script',
+  '/delivery',
+  '/submit-rehearsal',
+  '/evidence',
+  '/dashboard',
+  '/search',
+  '/glossary',
+  '/notes',
+  '/troubleshooting',
+  '/reports',
+  '/resources',
   ...moduleIds.map((id) => `/modules/${id}`),
 ];
 
@@ -29,7 +52,10 @@ const mime = {
 function readDist(pathname) {
   const clean = pathname === '/' ? '/index.html' : pathname;
   try {
-    return { body: readFileSync(join(dist, clean)), type: mime[extname(clean)] || 'application/octet-stream' };
+    return {
+      body: readFileSync(join(dist, clean)),
+      type: mime[extname(clean)] || 'application/octet-stream',
+    };
   } catch {
     return null;
   }
@@ -50,14 +76,18 @@ async function check(url, expectHtml = false) {
   const response = await fetch(url);
   const body = await response.text();
   if (response.status !== 200) throw new Error(`${url} returned HTTP ${response.status}`);
-  if (expectHtml && !body.includes('<div id="root"></div>')) throw new Error(`${url} did not return SPA index.html`);
+  if (expectHtml && !body.includes('<div id="root"></div>'))
+    throw new Error(`${url} did not return SPA index.html`);
   return body;
 }
 
 try {
   if (!process.env.VERIFY_BASE_URL) await listen();
   const html = await check(`${baseUrl}/`, true);
-  const assets = Array.from(html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g), (match) => match[1]);
+  const assets = Array.from(
+    html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g),
+    (match) => match[1],
+  );
   if (!assets.length) throw new Error('No built /assets references found in index.html');
 
   for (const route of routes) await check(`${baseUrl}${route}`, true);

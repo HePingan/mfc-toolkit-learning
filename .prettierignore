@@ -1,0 +1,9 @@
+node_modules
+dist
+assets
+coverage
+playwright-report
+test-results
+.hermes
+.backup-*
+qa

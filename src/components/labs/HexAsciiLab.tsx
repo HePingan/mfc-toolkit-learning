@@ -22,7 +22,9 @@ export function HexAsciiLab() {
   return (
     <Card>
       <h3>ASCII / HEX 转换器 {progress.completedLabs.includes('hex-ascii') && '✅'}</h3>
-      <p className="muted">浏览器内模拟编码转换，不访问真实串口；可用于检查 MFC 串口收发前的 HEX 文本格式。</p>
+      <p className="muted">
+        浏览器内模拟编码转换，不访问真实串口；可用于检查 MFC 串口收发前的 HEX 文本格式。
+      </p>
       <div className="two-col">
         <label>
           ASCII 文本
@@ -48,13 +50,25 @@ export function HexAsciiLab() {
           />
         </label>
       </div>
-      {error && <p className="warning-text" role="alert">{error}</p>}
-      {!error && <pre className="result">当前 ASCII：{ascii || '（空）'}\n当前 HEX：{hex || '（空）'}</pre>}
+      {error && (
+        <p className="warning-text" role="alert">
+          {error}
+        </p>
+      )}
+      {!error && (
+        <pre className="result">
+          当前 ASCII：{ascii || '（空）'}\n当前 HEX：{hex || '（空）'}
+        </pre>
+      )}
       <div className="form-row">
         <CopyButton text={hex} label="复制 HEX" />
         <CopyButton text={ascii} label="复制 ASCII" />
-        <Button className="button-ghost" type="button" onClick={resetSample}>恢复示例</Button>
-        <Button type="button" onClick={() => markLab('hex-ascii')}>标记完成</Button>
+        <Button className="button-ghost" type="button" onClick={resetSample}>
+          恢复示例
+        </Button>
+        <Button type="button" onClick={() => markLab('hex-ascii')}>
+          标记完成
+        </Button>
       </div>
     </Card>
   );

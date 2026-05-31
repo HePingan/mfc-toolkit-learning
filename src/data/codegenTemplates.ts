@@ -4,12 +4,23 @@ export type CodegenMode = 'basic' | 'practical' | 'teaching';
 
 export const codegenModes: Array<{ id: CodegenMode; title: string; description: string }> = [
   { id: 'basic', title: '基础骨架', description: '类声明、空函数和 TODO，适合刚开始理解结构。' },
-  { id: 'practical', title: '实战增强', description: 'Logger / INI / WorkerThread 提供更接近 MFC 实战的实现结构。' },
-  { id: 'teaching', title: '教学注释版', description: '在实战增强基础上加入中文注释、排错提示和接入边界说明。' },
+  {
+    id: 'practical',
+    title: '实战增强',
+    description: 'Logger / INI / WorkerThread 提供更接近 MFC 实战的实现结构。',
+  },
+  {
+    id: 'teaching',
+    title: '教学注释版',
+    description: '在实战增强基础上加入中文注释、排错提示和接入边界说明。',
+  },
 ];
 
 const loggerPractical: CodegenFile[] = [
-  { path: 'Logger.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'Logger.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <functional>
 
@@ -43,8 +54,12 @@ public:
 private:
   CRITICAL_SECTION m_lock;
   LogCallback m_callback;
-};` },
-  { path: 'Logger.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'Logger.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "Logger.h"
 #include <afx.h>
 
@@ -102,11 +117,15 @@ CString Logger::Format(LogLevel level, const CString& message)
     LevelText(level).GetString(),
     message.GetString());
   return line;
-}` },
+}`,
+  },
 ];
 
 const configPractical: CodegenFile[] = [
-  { path: 'ConfigStore.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'ConfigStore.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 
 struct AppConfig
@@ -135,8 +154,12 @@ public:
 
 private:
   CString m_fileName;
-};` },
-  { path: 'ConfigStore.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'ConfigStore.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "ConfigStore.h"
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
@@ -207,8 +230,12 @@ bool ConfigStore::Save(const AppConfig& config, CString& error) const
   WriteInt(_T("Network"), _T("AutoReconnect"), config.autoReconnect ? 1 : 0);
   WriteString(_T("HTTP"), _T("Url"), config.httpUrl);
   return true;
-}` },
-  { path: 'app.ini', language: 'ini', content: `[Serial]
+}`,
+  },
+  {
+    path: 'app.ini',
+    language: 'ini',
+    content: `[Serial]
 Port=COM3
 BaudRate=9600
 Mode=HEX
@@ -225,11 +252,15 @@ TimeoutMs=5000
 [UI]
 Theme=Dark
 LogMaxLines=1000
-` },
+`,
+  },
 ];
 
 const workerPractical: CodegenFile[] = [
-  { path: 'WorkerThread.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'WorkerThread.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <atomic>
 #include <functional>
 #include <afxwin.h>
@@ -256,8 +287,12 @@ private:
   std::atomic_bool m_stopFlag { false };
   CEvent m_doneEvent;
   Task m_task;
-};` },
-  { path: 'WorkerThread.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'WorkerThread.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "WorkerThread.h"
 
 WorkerThread::WorkerThread()
@@ -325,12 +360,15 @@ UINT WorkerThread::ThreadProc(LPVOID pParam)
   }
   self->m_doneEvent.SetEvent();
   return 0;
-}` },
+}`,
+  },
 ];
 
-
 const serialPractical: CodegenFile[] = [
-  { path: 'SerialManager.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'SerialManager.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <windows.h>
 #include <vector>
@@ -367,8 +405,12 @@ private:
   CString FormatLastError(DWORD errorCode) const;
 
   HANDLE m_handle = INVALID_HANDLE_VALUE;
-};` },
-  { path: 'SerialManager.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'SerialManager.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "SerialManager.h"
 #include <atlconv.h>
 
@@ -499,11 +541,15 @@ CString SerialManager::FormatLastError(DWORD errorCode) const
   CString text;
   text.Format(_T("Win32 error %lu"), errorCode);
   return text;
-}` },
+}`,
+  },
 ];
 
 const tcpClientPractical: CodegenFile[] = [
-  { path: 'TcpClient.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'TcpClient.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -527,8 +573,12 @@ private:
 
   SOCKET m_socket = INVALID_SOCKET;
   bool m_wsaStarted = false;
-};` },
-  { path: 'TcpClient.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'TcpClient.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "TcpClient.h"
 #include <atlconv.h>
 
@@ -615,11 +665,15 @@ CString TcpClient::FormatWsaError(int code) const
   CString text;
   text.Format(_T("WSA error %d"), code);
   return text;
-}` },
+}`,
+  },
 ];
 
 const tcpServerPractical: CodegenFile[] = [
-  { path: 'TcpServer.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'TcpServer.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -642,8 +696,12 @@ private:
 
   SOCKET m_listenSocket = INVALID_SOCKET;
   bool m_wsaStarted = false;
-};` },
-  { path: 'TcpServer.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'TcpServer.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "TcpServer.h"
 
 TcpServer::TcpServer() = default;
@@ -705,11 +763,15 @@ CString TcpServer::FormatWsaError(int code) const
   CString text;
   text.Format(_T("WSA error %d"), code);
   return text;
-}` },
+}`,
+  },
 ];
 
 const httpClientPractical: CodegenFile[] = [
-  { path: 'HttpClient.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'HttpClient.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <windows.h>
 #include <winhttp.h>
@@ -736,8 +798,12 @@ private:
   CString FormatLastError(DWORD errorCode) const;
 
   HINTERNET m_session = nullptr;
-};` },
-  { path: 'HttpClient.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'HttpClient.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "HttpClient.h"
 #include <atlconv.h>
 
@@ -827,12 +893,15 @@ CString HttpClient::FormatLastError(DWORD errorCode) const
   CString text;
   text.Format(_T("WinHTTP/Win32 error %lu"), errorCode);
   return text;
-}` },
+}`,
+  },
 ];
 
-
 const sqlitePractical: CodegenFile[] = [
-  { path: 'SqliteStore.h', language: 'cpp', content: `#pragma once
+  {
+    path: 'SqliteStore.h',
+    language: 'cpp',
+    content: `#pragma once
 #include <afxstr.h>
 #include <afxcoll.h>
 #include <vector>
@@ -869,8 +938,12 @@ private:
   bool Exec(const CString& sql, CString& error);
 
   sqlite3* m_db = nullptr;
-};` },
-  { path: 'SqliteStore.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+  },
+  {
+    path: 'SqliteStore.cpp',
+    language: 'cpp',
+    content: `#include "pch.h"
 #include "SqliteStore.h"
 #include <Shlwapi.h>
 #pragma comment(lib, "sqlite3.lib")
@@ -996,8 +1069,12 @@ CString SqliteStore::LastError() const
 {
   if (!m_db) return _T("SQLite database handle is null");
   return CA2T(sqlite3_errmsg(m_db), CP_UTF8);
-}` },
-  { path: 'docs/sqlite-integration.md', language: 'md', content: `# SQLite Integration Notes
+}`,
+  },
+  {
+    path: 'docs/sqlite-integration.md',
+    language: 'md',
+    content: `# SQLite Integration Notes
 
 Codegen v5 SQLite CRUD 模板用于 Windows + Visual Studio + MFC 本地实践。
 
@@ -1014,7 +1091,8 @@ Codegen v5 SQLite CRUD 模板用于 Windows + Visual Studio + MFC 本地实践�
 - 运行时报 sqlite3.dll missing：DLL 没放到 exe 目录。
 - 中文乱码：建议统一 UTF-8 存储，MFC CString 转换时使用 CP_UTF8。
 - database is locked：写入事务未结束，或多线程同时写库没有串行化。
-` },
+`,
+  },
 ];
 
 function teachingFiles(files: CodegenFile[]): CodegenFile[] {
@@ -1038,7 +1116,11 @@ const enhancedByModule: Record<string, CodegenFile[]> = {
   'worker-thread': workerPractical,
 };
 
-export function applyCodegenMode(moduleId: string, files: CodegenFile[], mode: CodegenMode): CodegenFile[] {
+export function applyCodegenMode(
+  moduleId: string,
+  files: CodegenFile[],
+  mode: CodegenMode,
+): CodegenFile[] {
   if (mode === 'basic') return files;
   const enhanced = enhancedByModule[moduleId] ?? files;
   return mode === 'teaching' ? teachingFiles(enhanced) : enhanced;
@@ -1046,6 +1128,7 @@ export function applyCodegenMode(moduleId: string, files: CodegenFile[], mode: C
 
 export function buildCodegenModeNotes(mode: CodegenMode): string {
   if (mode === 'basic') return '基础骨架：保留轻量 TODO，适合先理解类和文件结构。';
-  if (mode === 'practical') return '实战增强：Logger/ConfigStore/WorkerThread/Serial/TCP/HTTP/SQLite 已升级为更接近真实 MFC 项目的实现结构。';
+  if (mode === 'practical')
+    return '实战增强：Logger/ConfigStore/WorkerThread/Serial/TCP/HTTP/SQLite 已升级为更接近真实 MFC 项目的实现结构。';
   return '教学注释版：在实战增强模板上加入中文说明，适合初学者边复制边理解。';
 }

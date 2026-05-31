@@ -11,7 +11,10 @@ export type ZipManifest = {
   files: ZipManifestFile[];
 };
 
-export async function downloadZipManifest(manifest: ZipManifest, filename = `${manifest.rootName}.zip`) {
+export async function downloadZipManifest(
+  manifest: ZipManifest,
+  filename = `${manifest.rootName}.zip`,
+) {
   const zip = new JSZip();
   const root = zip.folder(manifest.rootName) ?? zip;
   manifest.files.forEach((file) => root.file(file.path, file.content));

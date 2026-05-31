@@ -10,7 +10,11 @@ export function downloadBlob(filename: string, blob: Blob) {
   URL.revokeObjectURL(url);
 }
 
-export function downloadTextFile(filename: string, content: string, type = 'text/plain;charset=utf-8') {
+export function downloadTextFile(
+  filename: string,
+  content: string,
+  type = 'text/plain;charset=utf-8',
+) {
   downloadBlob(filename, new Blob([content], { type }));
 }
 

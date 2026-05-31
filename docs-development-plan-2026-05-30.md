@@ -98,6 +98,7 @@ DOCX 对首页和 UI 风格要求较高：现代工程师学习站、开发者�
 ### Task 1.1：扩展 `CourseModule` 数据结构
 
 **Files:**
+
 - Modify: `src/data/modules.ts`
 - Modify: `src/pages/ModulePage.tsx`
 
@@ -116,6 +117,7 @@ nextActions?: string[];
 ```
 
 **验收：**
+
 - 每个模块页底部显示“本章本地实战任务”；
 - 显示验收标准；
 - 可跳转到 `/practice` 或 `/codegen`。
@@ -123,9 +125,11 @@ nextActions?: string[];
 ### Task 1.2：补充 7 个模块正文
 
 **Files:**
+
 - Modify: `src/data/modules.ts`
 
 **补充方向：**
+
 - `overview`：VS/MFC 环境安装、为什么浏览器只能模拟；
 - `serial`：COM 口排查、RS232/RS485 区别、Modbus CRC 注意事项；
 - `network`：HTTP vs TCP、粘包/拆包、超时、断线重连；
@@ -135,6 +139,7 @@ nextActions?: string[];
 - `capstone`：模块拆分、开发顺序、测试打包。
 
 **验收：**
+
 - 每章至少 4 个正文 section；
 - 每章至少 1 段示例代码或伪代码；
 - 每章有本地实践任务和验收标准。
@@ -142,9 +147,11 @@ nextActions?: string[];
 ### Task 1.3：Module 页面加入“学完本章后做什么”
 
 **Files:**
+
 - Modify: `src/pages/ModulePage.tsx`
 
 **验收：**
+
 - 显示下一步按钮：做实验、做测验、本地实战、下一章；
 - 根据模块是否有 labs 自动显示实验入口；
 - 保持移动端布局正常。
@@ -158,6 +165,7 @@ nextActions?: string[];
 ### Task 2.1：扩展资源数据模型
 
 **Files:**
+
 - Modify: `src/data/resources.ts`
 
 **建议字段：**
@@ -174,6 +182,7 @@ export type ResourceItem = {
 ```
 
 **验收：**
+
 - 至少 30 条资源；
 - 保留原始来源 `https://blog.1ct7.top/read_12`；
 - 资源按分类可筛选。
@@ -181,10 +190,12 @@ export type ResourceItem = {
 ### Task 2.2：重构 `ResourcesPage`
 
 **Files:**
+
 - Modify: `src/pages/ResourcesPage.tsx`
 - Modify: `src/styles/global.css`
 
 **功能：**
+
 - 搜索；
 - 分类筛选；
 - 资源卡片；
@@ -193,6 +204,7 @@ export type ResourceItem = {
 - 与 `/glossary` 的入口。
 
 **验收：**
+
 - 页面不再是一行 JSX；
 - 搜索关键字能过滤资源；
 - 点击分类能过滤；
@@ -207,6 +219,7 @@ export type ResourceItem = {
 ### Task 3.1：扩展 Lab 数据
 
 **Files:**
+
 - Modify: `src/data/labs.ts`
 - Modify: `src/pages/LabsPage.tsx`
 
@@ -222,6 +235,7 @@ mfcHint?: {
 ```
 
 **验收：**
+
 - 每个实验卡片展示“本地实现提示”；
 - 有按钮跳转 `/codegen` 或 `/designer`；
 - 明确提示浏览器不真实访问串口/TCP/SQLite。
@@ -229,9 +243,11 @@ mfcHint?: {
 ### Task 3.2：为 11 个实验补齐实现提示
 
 **Files:**
+
 - Modify: `src/data/labs.ts`
 
 **重点：**
+
 - 串口实验对应 `SerialManager.h/.cpp`；
 - TCP 实验对应 `TcpClient/TcpServer`；
 - HTTP 实验对应 `HttpClient`；
@@ -247,11 +263,13 @@ mfcHint?: {
 ### Task 4.1：ZIP 增加导入和测试文档
 
 **Files:**
+
 - Modify: `src/data/codegen.ts`
 - Modify: `src/data/miniProject.ts`
 - Possibly Modify: `src/components/codegen/CodegenPanels.tsx`
 
 **新增 ZIP 文件：**
+
 - `docs/README_如何导入VisualStudio.md`
 - `docs/测试步骤.md`
 - `docs/常见编译错误.md`
@@ -259,6 +277,7 @@ mfcHint?: {
 - `docs/验收清单.md`
 
 **验收：**
+
 - ZIP 内包含以上文档；
 - 文档内容与 `/integration` 流程一致；
 - 页面预览能看到这些文档文件。
@@ -266,10 +285,12 @@ mfcHint?: {
 ### Task 4.2：代码模板标注“教学版/实用版/基础版”差异
 
 **Files:**
+
 - Modify: `src/data/codegenTemplates.ts`
 - Modify: `src/components/codegen/CodegenPanels.tsx`
 
 **验收：**
+
 - 切换 mode 后，说明文字和生成文件都有明显区别；
 - 实用版更接近真实工程；
 - 教学版注释更多，适合初学者。
@@ -283,25 +304,30 @@ mfcHint?: {
 ### Task 5.1：Quiz 提交后给出下一步建议
 
 **Files:**
+
 - Modify: `src/components/quiz/QuizRunner.tsx`
 - Modify: `src/components/quiz/ScorePanel.tsx`
 
 **逻辑：**
+
 - 分数 >= 85：建议进入本地实战或下一章；
 - 60~84：建议复习错题并重做实验；
 - < 60：建议回到模块页重读核心概念。
 
 **验收：**
+
 - 提交后显示具体按钮：模块页、实验页、本地实战、下一章。
 
 ### Task 5.2：Reports 增加项目交付缺口清单
 
 **Files:**
+
 - Modify: `src/utils/report.ts`
 - Modify: `src/pages/ReportsPage.tsx`
 - Modify: `src/components/report/ReportCards.tsx`
 
 **内容：**
+
 - 未完成模块；
 - 未完成实验；
 - 未完成本地实践任务；
@@ -310,6 +336,7 @@ mfcHint?: {
 - 下一周学习建议。
 
 **验收：**
+
 - 报告 Markdown 导出包含“项目交付缺口”；
 - JSON 导出也包含缺口字段。
 
@@ -322,11 +349,13 @@ mfcHint?: {
 ### Task 6.1：首页增加学习路线信息图
 
 **Files:**
+
 - Modify: `src/pages/Home.tsx`
 - Modify: `src/components/course/Diagrams.tsx`
 - Modify: `src/styles/global.css`
 
 **验收：**
+
 - 首页展示 7 模块路线图；
 - 每个节点显示完成状态；
 - 点击节点进入对应模块。
@@ -334,11 +363,13 @@ mfcHint?: {
 ### Task 6.2：Capstone 增加最终软件 UI 草图
 
 **Files:**
+
 - Modify: `src/pages/CapstonePage.tsx`
 - Modify: `src/components/course/Diagrams.tsx`
 
 **内容：**
 画一个 MFC 通用调试工具界面草图：
+
 - Tab：Serial / TCP Client / TCP Server / HTTP / Settings；
 - 左侧参数面板；
 - 中间发送/接收区；
@@ -346,6 +377,7 @@ mfcHint?: {
 - 底部状态栏。
 
 **验收：**
+
 - 不依赖外部图片；
 - 用 React/CSS/SVG 实现；
 - 移动端能正常缩放。

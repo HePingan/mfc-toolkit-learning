@@ -1,6 +1,14 @@
+/* eslint-disable no-useless-escape */
 import { CodegenMode, applyCodegenMode, buildCodegenModeNotes } from './codegenTemplates';
 import { buildDialogWiring } from './dialogWiring';
-import { buildBuildOrderChecklist, buildFinalDialogCpp, buildFinalDialogHeader, buildMiniProjectBlueprint, buildResourceHeader, buildVisualStudioPropertyPages } from './miniProject';
+import {
+  buildBuildOrderChecklist,
+  buildFinalDialogCpp,
+  buildFinalDialogHeader,
+  buildMiniProjectBlueprint,
+  buildResourceHeader,
+  buildVisualStudioPropertyPages,
+} from './miniProject';
 import { buildNativeApiNotes } from './nativeDeps';
 
 export type CodegenFile = {
@@ -26,9 +34,15 @@ export const codegenModules: CodegenModule[] = [
     description: '主界面、控件变量、日志入口和消息映射起点。',
     recommended: true,
     controls: ['IDC_TAB_MAIN', 'IDC_LIST_LOG', 'IDC_BTN_CLEAR_LOG', 'IDC_STATIC_STATUS'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_CLEAR_LOG, &CMfcToolkitDlg::OnBnClickedClearLog)', 'ON_WM_CLOSE()'],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_CLEAR_LOG, &CMfcToolkitDlg::OnBnClickedClearLog)',
+      'ON_WM_CLOSE()',
+    ],
     files: [
-      { path: 'MfcToolkitDlg.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'MfcToolkitDlg.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxwin.h>
 #include <afxcmn.h>
 
@@ -55,8 +69,12 @@ private:
 public:
   afx_msg void OnBnClickedClearLog();
   afx_msg void OnClose();
-};` },
-      { path: 'MfcToolkitDlg.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'MfcToolkitDlg.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "MfcToolkit.h"
 #include "MfcToolkitDlg.h"
 
@@ -112,7 +130,8 @@ void CMfcToolkitDlg::OnClose()
 {
   AppendLog(_T("INFO"), _T("Closing application"));
   CDialogEx::OnClose();
-}` },
+}`,
+      },
     ],
   },
   {
@@ -123,7 +142,10 @@ void CMfcToolkitDlg::OnClose()
     controls: ['IDC_LIST_LOG'],
     messageMap: [],
     files: [
-      { path: 'Logger.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'Logger.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 enum class LogLevel { Info, Warn, Error };
@@ -133,8 +155,12 @@ class Logger
 public:
   static CString Format(LogLevel level, const CString& text);
   static CString LevelText(LogLevel level);
-};` },
-      { path: 'Logger.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'Logger.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "Logger.h"
 
 CString Logger::LevelText(LogLevel level)
@@ -151,18 +177,33 @@ CString Logger::Format(LogLevel level, const CString& text)
   CString line;
   line.Format(_T("[%s][%s] %s"), CTime::GetCurrentTime().Format(_T("%H:%M:%S")), LevelText(level).GetString(), text.GetString());
   return line;
-}` },
+}`,
+      },
     ],
   },
   {
     id: 'serial',
     title: 'SerialManager 串口模块',
-    description: '串口参数、打开关闭、ASCII/HEX 发送入口。真实串口 API 在本地 Visual Studio 中补全。',
+    description:
+      '串口参数、打开关闭、ASCII/HEX 发送入口。真实串口 API 在本地 Visual Studio 中补全。',
     recommended: false,
-    controls: ['IDC_COMBO_SERIAL_PORT', 'IDC_COMBO_SERIAL_BAUD', 'IDC_COMBO_SERIAL_PARITY', 'IDC_BTN_SERIAL_OPEN', 'IDC_BTN_SERIAL_SEND', 'IDC_EDIT_SERIAL_SEND'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_SERIAL_OPEN, &CMfcToolkitDlg::OnBnClickedSerialOpen)', 'ON_BN_CLICKED(IDC_BTN_SERIAL_SEND, &CMfcToolkitDlg::OnBnClickedSerialSend)'],
+    controls: [
+      'IDC_COMBO_SERIAL_PORT',
+      'IDC_COMBO_SERIAL_BAUD',
+      'IDC_COMBO_SERIAL_PARITY',
+      'IDC_BTN_SERIAL_OPEN',
+      'IDC_BTN_SERIAL_SEND',
+      'IDC_EDIT_SERIAL_SEND',
+    ],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_SERIAL_OPEN, &CMfcToolkitDlg::OnBnClickedSerialOpen)',
+      'ON_BN_CLICKED(IDC_BTN_SERIAL_SEND, &CMfcToolkitDlg::OnBnClickedSerialSend)',
+    ],
     files: [
-      { path: 'SerialManager.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'SerialManager.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 struct SerialConfig
@@ -186,8 +227,12 @@ public:
 private:
   bool m_opened = false;
   SerialConfig m_config;
-};` },
-      { path: 'SerialManager.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'SerialManager.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "SerialManager.h"
 
 bool SerialManager::Open(const SerialConfig& config, CString& error)
@@ -226,7 +271,8 @@ bool SerialManager::SendHex(const CString& hexText, CString& error)
   if (!m_opened) { error = _T("Serial not open"); return false; }
   // TODO: 校验 HEX 格式并转 bytes。
   return true;
-}` },
+}`,
+      },
     ],
   },
   {
@@ -234,10 +280,22 @@ bool SerialManager::SendHex(const CString& hexText, CString& error)
     title: 'TcpClient TCP 客户端',
     description: '连接、发送、接收和断线提示；建议放入工作线程。',
     recommended: false,
-    controls: ['IDC_EDIT_TCP_HOST', 'IDC_EDIT_TCP_PORT', 'IDC_BTN_TCP_CONNECT', 'IDC_BTN_TCP_SEND', 'IDC_EDIT_TCP_SEND'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_TCP_CONNECT, &CMfcToolkitDlg::OnBnClickedTcpConnect)', 'ON_BN_CLICKED(IDC_BTN_TCP_SEND, &CMfcToolkitDlg::OnBnClickedTcpSend)'],
+    controls: [
+      'IDC_EDIT_TCP_HOST',
+      'IDC_EDIT_TCP_PORT',
+      'IDC_BTN_TCP_CONNECT',
+      'IDC_BTN_TCP_SEND',
+      'IDC_EDIT_TCP_SEND',
+    ],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_TCP_CONNECT, &CMfcToolkitDlg::OnBnClickedTcpConnect)',
+      'ON_BN_CLICKED(IDC_BTN_TCP_SEND, &CMfcToolkitDlg::OnBnClickedTcpSend)',
+    ],
     files: [
-      { path: 'TcpClient.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'TcpClient.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 class TcpClient
@@ -249,8 +307,12 @@ public:
   bool IsConnected() const;
 private:
   bool m_connected = false;
-};` },
-      { path: 'TcpClient.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'TcpClient.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "TcpClient.h"
 
 bool TcpClient::Connect(const CString& host, int port, CString& error)
@@ -275,7 +337,8 @@ void TcpClient::Disconnect()
   m_connected = false;
 }
 
-bool TcpClient::IsConnected() const { return m_connected; }` },
+bool TcpClient::IsConnected() const { return m_connected; }`,
+      },
     ],
   },
   {
@@ -284,9 +347,15 @@ bool TcpClient::IsConnected() const { return m_connected; }` },
     description: '监听端口、接收客户端、回发消息。',
     recommended: false,
     controls: ['IDC_EDIT_SERVER_PORT', 'IDC_BTN_SERVER_LISTEN', 'IDC_BTN_SERVER_STOP'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_SERVER_LISTEN, &CMfcToolkitDlg::OnBnClickedServerListen)', 'ON_BN_CLICKED(IDC_BTN_SERVER_STOP, &CMfcToolkitDlg::OnBnClickedServerStop)'],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_SERVER_LISTEN, &CMfcToolkitDlg::OnBnClickedServerListen)',
+      'ON_BN_CLICKED(IDC_BTN_SERVER_STOP, &CMfcToolkitDlg::OnBnClickedServerStop)',
+    ],
     files: [
-      { path: 'TcpServer.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'TcpServer.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 class TcpServer
@@ -297,8 +366,12 @@ public:
   bool IsListening() const;
 private:
   bool m_listening = false;
-};` },
-      { path: 'TcpServer.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'TcpServer.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "TcpServer.h"
 
 bool TcpServer::Start(int port, CString& error)
@@ -315,7 +388,8 @@ void TcpServer::Stop()
   m_listening = false;
 }
 
-bool TcpServer::IsListening() const { return m_listening; }` },
+bool TcpServer::IsListening() const { return m_listening; }`,
+      },
     ],
   },
   {
@@ -323,10 +397,19 @@ bool TcpServer::IsListening() const { return m_listening; }` },
     title: 'HttpClient HTTP 模块',
     description: 'GET/POST 请求骨架，重点处理 Header、Body、状态码和日志。',
     recommended: false,
-    controls: ['IDC_COMBO_HTTP_METHOD', 'IDC_EDIT_HTTP_URL', 'IDC_EDIT_HTTP_HEADERS', 'IDC_EDIT_HTTP_BODY', 'IDC_BTN_HTTP_SEND'],
+    controls: [
+      'IDC_COMBO_HTTP_METHOD',
+      'IDC_EDIT_HTTP_URL',
+      'IDC_EDIT_HTTP_HEADERS',
+      'IDC_EDIT_HTTP_BODY',
+      'IDC_BTN_HTTP_SEND',
+    ],
     messageMap: ['ON_BN_CLICKED(IDC_BTN_HTTP_SEND, &CMfcToolkitDlg::OnBnClickedHttpSend)'],
     files: [
-      { path: 'HttpClient.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'HttpClient.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 struct HttpRequest
@@ -348,8 +431,12 @@ class HttpClient
 {
 public:
   HttpResponse Send(const HttpRequest& request);
-};` },
-      { path: 'HttpClient.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'HttpClient.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "HttpClient.h"
 
 HttpResponse HttpClient::Send(const HttpRequest& request)
@@ -364,7 +451,8 @@ HttpResponse HttpClient::Send(const HttpRequest& request)
   response.statusCode = 200;
   response.body = _T("{\\\"ok\\\":true}");
   return response;
-}` },
+}`,
+      },
     ],
   },
 
@@ -373,10 +461,22 @@ HttpResponse HttpClient::Send(const HttpRequest& request)
     title: 'SqliteStore SQLite CRUD',
     description: '设备、历史记录和参数表的 sqlite3 CRUD 封装模板。',
     recommended: false,
-    controls: ['IDC_BTN_SQLITE_OPEN', 'IDC_BTN_SQLITE_QUERY', 'IDC_BTN_SQLITE_INSERT', 'IDC_LIST_SQLITE_ROWS'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_SQLITE_OPEN, &CMfcToolkitDlg::OnBnClickedSqliteOpen)', 'ON_BN_CLICKED(IDC_BTN_SQLITE_QUERY, &CMfcToolkitDlg::OnBnClickedSqliteQuery)', 'ON_BN_CLICKED(IDC_BTN_SQLITE_INSERT, &CMfcToolkitDlg::OnBnClickedSqliteInsert)'],
+    controls: [
+      'IDC_BTN_SQLITE_OPEN',
+      'IDC_BTN_SQLITE_QUERY',
+      'IDC_BTN_SQLITE_INSERT',
+      'IDC_LIST_SQLITE_ROWS',
+    ],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_SQLITE_OPEN, &CMfcToolkitDlg::OnBnClickedSqliteOpen)',
+      'ON_BN_CLICKED(IDC_BTN_SQLITE_QUERY, &CMfcToolkitDlg::OnBnClickedSqliteQuery)',
+      'ON_BN_CLICKED(IDC_BTN_SQLITE_INSERT, &CMfcToolkitDlg::OnBnClickedSqliteInsert)',
+    ],
     files: [
-      { path: 'SqliteStore.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'SqliteStore.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 class SqliteStore
@@ -387,8 +487,12 @@ public:
   bool InitSchema(CString& error);
   bool InsertHistory(const CString& channel, const CString& payload, CString& error);
   bool QueryHistory(CStringArray& rows, CString& error);
-};` },
-      { path: 'SqliteStore.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'SqliteStore.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "SqliteStore.h"
 
 bool SqliteStore::Open(const CString& dbPath, CString& error)
@@ -421,7 +525,8 @@ bool SqliteStore::QueryHistory(CStringArray& rows, CString& error)
   rows.Add(_T("1 | serial | example payload"));
   // TODO: sqlite3_prepare_v2 + sqlite3_step + sqlite3_column_text16。
   return true;
-}` },
+}`,
+      },
     ],
   },
   {
@@ -430,9 +535,15 @@ bool SqliteStore::QueryHistory(CStringArray& rows, CString& error)
     description: '集中处理配置路径、默认参数和历史记录保存。',
     recommended: false,
     controls: ['IDC_BTN_CONFIG_SAVE', 'IDC_BTN_CONFIG_LOAD', 'IDC_LIST_DEVICE'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_CONFIG_SAVE, &CMfcToolkitDlg::OnBnClickedConfigSave)', 'ON_BN_CLICKED(IDC_BTN_CONFIG_LOAD, &CMfcToolkitDlg::OnBnClickedConfigLoad)'],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_CONFIG_SAVE, &CMfcToolkitDlg::OnBnClickedConfigSave)',
+      'ON_BN_CLICKED(IDC_BTN_CONFIG_LOAD, &CMfcToolkitDlg::OnBnClickedConfigLoad)',
+    ],
     files: [
-      { path: 'ConfigStore.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'ConfigStore.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <afxstr.h>
 
 struct AppConfig
@@ -449,8 +560,12 @@ public:
   CString GetConfigPath() const;
   bool Load(AppConfig& config, CString& error);
   bool Save(const AppConfig& config, CString& error);
-};` },
-      { path: 'ConfigStore.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'ConfigStore.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "ConfigStore.h"
 
 CString ConfigStore::GetConfigPath() const
@@ -476,8 +591,12 @@ bool ConfigStore::Save(const AppConfig& config, CString& error)
   CString path = GetConfigPath();
   // TODO: 确保 config 目录存在，并用 WritePrivateProfileString 保存。
   return true;
-}` },
-      { path: 'app.ini', language: 'ini', content: `[Serial]
+}`,
+      },
+      {
+        path: 'app.ini',
+        language: 'ini',
+        content: `[Serial]
 Port=COM3
 BaudRate=9600
 Mode=HEX
@@ -488,7 +607,8 @@ Port=502
 
 [UI]
 Theme=Dark
-` },
+`,
+      },
     ],
   },
   {
@@ -497,9 +617,15 @@ Theme=Dark
     description: '耗时通讯不阻塞 UI，关闭窗口前可控退出。',
     recommended: true,
     controls: ['IDC_BTN_TASK_START', 'IDC_BTN_TASK_STOP', 'IDC_STATIC_STATUS'],
-    messageMap: ['ON_BN_CLICKED(IDC_BTN_TASK_START, &CMfcToolkitDlg::OnBnClickedTaskStart)', 'ON_BN_CLICKED(IDC_BTN_TASK_STOP, &CMfcToolkitDlg::OnBnClickedTaskStop)'],
+    messageMap: [
+      'ON_BN_CLICKED(IDC_BTN_TASK_START, &CMfcToolkitDlg::OnBnClickedTaskStart)',
+      'ON_BN_CLICKED(IDC_BTN_TASK_STOP, &CMfcToolkitDlg::OnBnClickedTaskStop)',
+    ],
     files: [
-      { path: 'WorkerThread.h', language: 'cpp', content: `#pragma once
+      {
+        path: 'WorkerThread.h',
+        language: 'cpp',
+        content: `#pragma once
 #include <atomic>
 #include <functional>
 
@@ -513,8 +639,12 @@ public:
 private:
   CWinThread* m_thread = nullptr;
   std::atomic_bool m_stop { false };
-};` },
-      { path: 'WorkerThread.cpp', language: 'cpp', content: `#include "pch.h"
+};`,
+      },
+      {
+        path: 'WorkerThread.cpp',
+        language: 'cpp',
+        content: `#include "pch.h"
 #include "WorkerThread.h"
 
 struct WorkerContext
@@ -546,7 +676,8 @@ void WorkerThread::Stop()
   m_thread = nullptr;
 }
 
-bool WorkerThread::IsRunning() const { return m_thread != nullptr; }` },
+bool WorkerThread::IsRunning() const { return m_thread != nullptr; }`,
+      },
     ],
   },
 ];
@@ -568,7 +699,9 @@ export function codegenPackageToMarkdown(ids: string[], mode: CodegenMode = 'bas
   const tree = pkg.files.map((file) => `- ${file.path}`).join('\n');
   const controls = pkg.controls.map((id) => `- ${id}`).join('\n') || '- 暂无控件 ID';
   const messageMap = pkg.messageMap.map((line) => `  ${line}`).join('\n') || '  // 暂无消息映射';
-  const files = pkg.files.map((file) => `## ${file.path}\n\n\`\`\`${file.language}\n${file.content}\n\`\`\``).join('\n\n');
+  const files = pkg.files
+    .map((file) => `## ${file.path}\n\n\`\`\`${file.language}\n${file.content}\n\`\`\``)
+    .join('\n\n');
   return `# MFC 通用工具代码骨架\n\n> 说明：本代码包用于 Windows + Visual Studio + MFC 本地项目起步，浏览器不编译、不访问真实串口/TCP/SQLite。\n> 代码模式：${buildCodegenModeNotes(mode)}\n\n## 已选择模块\n\n${pkg.selected.map((module) => `- ${module.title}`).join('\n')}\n\n## 文件树\n\n${tree}\n\n## 控件 ID 建议\n\n${controls}\n\n## Message Map 示例\n\n\`\`\`cpp\nBEGIN_MESSAGE_MAP(CMfcToolkitDlg, CDialogEx)\n${messageMap}\nEND_MESSAGE_MAP()\n\`\`\`\n\n${files}\n`;
 }
 
@@ -577,11 +710,17 @@ export type CodegenZipManifest = {
   files: { path: string; content: string }[];
 };
 
-export function buildCodegenZipManifest(ids: string[], mode: CodegenMode = 'basic'): CodegenZipManifest {
+export function buildCodegenZipManifest(
+  ids: string[],
+  mode: CodegenMode = 'basic',
+): CodegenZipManifest {
   const pkg = buildCodegenPackage(ids, mode);
-  const moduleList = pkg.selected.map((module) => `- ${module.title}：${module.description}`).join('\n') || '- 未选择模块';
+  const moduleList =
+    pkg.selected.map((module) => `- ${module.title}：${module.description}`).join('\n') ||
+    '- 未选择模块';
   const controls = pkg.controls.map((id) => `- ${id}`).join('\n') || '- 暂无控件 ID';
-  const messageMapLines = pkg.messageMap.map((line) => `  ${line}`).join('\n') || '  // 暂无消息映射';
+  const messageMapLines =
+    pkg.messageMap.map((line) => `  ${line}`).join('\n') || '  // 暂无消息映射';
   const fileTree = pkg.files.map((file) => `- ${file.path}`).join('\n') || '- 暂无代码文件';
   const acceptance = [
     '窗口能启动并显示主 Dialog',
@@ -592,7 +731,9 @@ export function buildCodegenZipManifest(ids: string[], mode: CodegenMode = 'basi
     '配置保存路径可见，保存后可读取验证',
     '关闭窗口前线程能收到停止信号并退出',
     '每接入一个模块都能单独编译和运行一次',
-  ].map((item) => `- [ ] ${item}`).join('\n');
+  ]
+    .map((item) => `- [ ] ${item}`)
+    .join('\n');
 
   const dialogWiring = buildDialogWiring(ids);
   const miniProjectFiles = [
@@ -609,9 +750,18 @@ export function buildCodegenZipManifest(ids: string[], mode: CodegenMode = 'basi
       path: 'README.md',
       content: `# MFC Toolkit Skeleton\n\n这是从“MFC 通用工具开发训练营”生成的本地项目代码骨架包。\n\n代码模式：${buildCodegenModeNotes(mode)}\n\n> 说明：本包用于 Windows + Visual Studio + MFC Dialog 项目起步。它不是完整 .sln/.vcxproj 工程；请先创建 MFC Dialog based 项目，再复制这些文件。\n\n## 已选择模块\n\n${moduleList}\n\n## 文件树\n\n${fileTree}\n\n## 快速使用\n\n1. 在 Visual Studio 创建 MFC App，应用类型选择 Dialog based。\n2. 将本包根目录下的 .h/.cpp/.ini 文件复制到项目目录。\n3. 在资源编辑器中添加控件，并按 docs/controls.md 设置控件 ID。\n4. 在 Dialog 类中按 docs/message-map.md 接入消息映射。\n5. 按 docs/integration-steps.md 逐步编译和测试。\n6. 对照 docs/acceptance-checklist.md 做最终验收。\n7. 如选择串口/TCP/HTTP/INI 模块，先阅读 docs/native-api-notes.md 并确认链接库。\n8. 阅读 docs/dialog-wiring.md，把 Dialog include、成员变量、DDX、OnInitDialog 和按钮事件片段接入 CMfcToolkitDlg。\n9. 阅读 docs/mini-project-blueprint.md、resource.generated.h 和 MfcToolkitDlg.final.*，按完整 Mini Project 顺序接入。\n\n## Native API 常用链接声明\n\n\`\`\`cpp\n#pragma comment(lib, "ws2_32.lib")\n#pragma comment(lib, "winhttp.lib")\n#pragma comment(lib, "sqlite3.lib")\n#pragma comment(lib, "Shlwapi.lib")\n\`\`\`\n`,
     },
-    { path: 'docs/controls.md', content: `# 控件 ID 清单\n\n${controls}\n\n建议：控件 ID 一旦用于消息映射，不要频繁改名；改名后必须同步 resource.h、DoDataExchange 和 BEGIN_MESSAGE_MAP。\n` },
-    { path: 'docs/message-map.md', content: `# Message Map 示例\n\n\`\`\`cpp\nBEGIN_MESSAGE_MAP(CMfcToolkitDlg, CDialogEx)\n${messageMapLines}\nEND_MESSAGE_MAP()\n\`\`\`\n` },
-    { path: 'docs/integration-steps.md', content: `# 接入步骤\n\n1. 创建 MFC Dialog 项目，确认 Debug x64 能运行空窗口。\n2. 先接入 Logger 和 Dialog 基础文件，确保日志窗口可输出。\n3. 添加资源控件：Tab、ListBox、Button、Edit、ComboBox、Static。\n4. 按 docs/controls.md 设置控件 ID。\n5. 按 docs/message-map.md 添加按钮事件。\n6. 每新增一个模块就单独编译一次，不要一次性接入全部模块。\n7. 串口、WinSock、WinHTTP、SQLite 的真实 API 请根据本地库版本补全 TODO。\n8. 关闭窗口前先停止工作线程，再释放 UI/通讯资源。\n` },
+    {
+      path: 'docs/controls.md',
+      content: `# 控件 ID 清单\n\n${controls}\n\n建议：控件 ID 一旦用于消息映射，不要频繁改名；改名后必须同步 resource.h、DoDataExchange 和 BEGIN_MESSAGE_MAP。\n`,
+    },
+    {
+      path: 'docs/message-map.md',
+      content: `# Message Map 示例\n\n\`\`\`cpp\nBEGIN_MESSAGE_MAP(CMfcToolkitDlg, CDialogEx)\n${messageMapLines}\nEND_MESSAGE_MAP()\n\`\`\`\n`,
+    },
+    {
+      path: 'docs/integration-steps.md',
+      content: `# 接入步骤\n\n1. 创建 MFC Dialog 项目，确认 Debug x64 能运行空窗口。\n2. 先接入 Logger 和 Dialog 基础文件，确保日志窗口可输出。\n3. 添加资源控件：Tab、ListBox、Button、Edit、ComboBox、Static。\n4. 按 docs/controls.md 设置控件 ID。\n5. 按 docs/message-map.md 添加按钮事件。\n6. 每新增一个模块就单独编译一次，不要一次性接入全部模块。\n7. 串口、WinSock、WinHTTP、SQLite 的真实 API 请根据本地库版本补全 TODO。\n8. 关闭窗口前先停止工作线程，再释放 UI/通讯资源。\n`,
+    },
     { path: 'docs/acceptance-checklist.md', content: `# 验收清单\n\n${acceptance}\n` },
     { path: 'docs/native-api-notes.md', content: buildNativeApiNotes(ids) },
     { path: 'docs/dialog-wiring.md', content: dialogWiring.markdown },
@@ -624,8 +774,7 @@ export function buildCodegenZipManifest(ids: string[], mode: CodegenMode = 'basi
   ];
 
   return {
-    rootName: mode === 'basic' ? 'MfcToolkitSkeleton' : `MfcToolkitSkeleton-${mode}`, 
+    rootName: mode === 'basic' ? 'MfcToolkitSkeleton' : `MfcToolkitSkeleton-${mode}`,
     files: [...docs, ...pkg.files.map((file) => ({ path: file.path, content: file.content }))],
   };
 }
-

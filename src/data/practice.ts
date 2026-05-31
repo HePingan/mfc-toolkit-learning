@@ -1,4 +1,10 @@
-export type PracticeStage = '环境准备' | '界面搭建' | '通讯模块' | '数据存储' | '稳定性' | '综合验收';
+export type PracticeStage =
+  | '环境准备'
+  | '界面搭建'
+  | '通讯模块'
+  | '数据存储'
+  | '稳定性'
+  | '综合验收';
 
 export type ProjectFile = {
   path: string;
@@ -65,8 +71,21 @@ export const practiceTemplates: PracticeTemplate[] = [
       { path: 'MfcToolkitDlg.h/.cpp', purpose: '主界面和按钮事件' },
       { path: 'resource.h', purpose: '维护控件 ID，避免后续消息映射混乱' },
     ],
-    controls: ['Tab Control', 'Button', 'Edit Control', 'ComboBox', 'ListBox 日志窗口', 'Static 状态提示'],
-    steps: ['创建 MFC App，选择 Dialog based', '添加 Tab Control、ComboBox、Edit、Button、ListBox', '给关键控件设置稳定 ID', '为“发送”和“清空日志”按钮添加事件函数', '实现 AppendLog，所有模块先统一写日志'],
+    controls: [
+      'Tab Control',
+      'Button',
+      'Edit Control',
+      'ComboBox',
+      'ListBox 日志窗口',
+      'Static 状态提示',
+    ],
+    steps: [
+      '创建 MFC App，选择 Dialog based',
+      '添加 Tab Control、ComboBox、Edit、Button、ListBox',
+      '给关键控件设置稳定 ID',
+      '为“发送”和“清空日志”按钮添加事件函数',
+      '实现 AppendLog，所有模块先统一写日志',
+    ],
     code: `BEGIN_MESSAGE_MAP(CMfcToolkitDlg, CDialogEx)
   ON_BN_CLICKED(IDC_BTN_SEND, &CMfcToolkitDlg::OnBnClickedSend)
   ON_BN_CLICKED(IDC_BTN_CLEAR_LOG, &CMfcToolkitDlg::OnBnClickedClearLog)
@@ -80,8 +99,18 @@ void CMfcToolkitDlg::AppendLog(const CString& text)
   m_listLog.AddString(line);
   m_listLog.SetCurSel(m_listLog.GetCount() - 1);
 }`,
-    checks: ['窗口能启动', '按钮点击能进入断点', '日志 ListBox 能追加文本', '控件 ID 命名清晰', 'UI 逻辑和业务模块开始分离'],
-    pitfalls: ['控件 ID 后期频繁改名导致消息映射失效', '所有逻辑堆在 Dialog 按钮函数里', '没有统一日志函数，后续排错困难'],
+    checks: [
+      '窗口能启动',
+      '按钮点击能进入断点',
+      '日志 ListBox 能追加文本',
+      '控件 ID 命名清晰',
+      'UI 逻辑和业务模块开始分离',
+    ],
+    pitfalls: [
+      '控件 ID 后期频繁改名导致消息映射失效',
+      '所有逻辑堆在 Dialog 按钮函数里',
+      '没有统一日志函数，后续排错困难',
+    ],
   },
   {
     id: 'serial-tab-template',
@@ -95,8 +124,21 @@ void CMfcToolkitDlg::AppendLog(const CString& text)
       { path: 'SerialManager.h/.cpp', purpose: '串口配置结构、打开关闭、收发入口' },
       { path: 'MfcToolkitDlg.cpp', purpose: '读取 UI 参数并调用 SerialManager' },
     ],
-    controls: ['COM ComboBox', 'BaudRate ComboBox', 'Parity ComboBox', 'ASCII/HEX Radio', 'Send Edit', 'Receive/List Log'],
-    steps: ['初始化 COM/波特率下拉框', '打开串口前校验参数', '发送前根据 ASCII/HEX 模式转换数据', '接收数据统一写入日志', 'Modbus 先复用帧构造结果，不急着接真实设备'],
+    controls: [
+      'COM ComboBox',
+      'BaudRate ComboBox',
+      'Parity ComboBox',
+      'ASCII/HEX Radio',
+      'Send Edit',
+      'Receive/List Log',
+    ],
+    steps: [
+      '初始化 COM/波特率下拉框',
+      '打开串口前校验参数',
+      '发送前根据 ASCII/HEX 模式转换数据',
+      '接收数据统一写入日志',
+      'Modbus 先复用帧构造结果，不急着接真实设备',
+    ],
     code: `struct SerialConfig {
   CString port = _T("COM3");
   DWORD baudRate = 9600;
@@ -118,8 +160,19 @@ void CMfcToolkitDlg::OnBnClickedSerialOpen()
   SerialConfig cfg = ReadSerialConfigFromUi();
   AppendLog(_T("Open serial: ") + FormatSerialConfig(cfg));
 }`,
-    checks: ['能显示 COM3, 9600, 8N1', 'ASCII/HEX 模式有明确提示', '参数错误时不打开串口', '收发日志包含时间戳', '串口模块和 UI 读取逻辑分开'],
-    pitfalls: ['ASCII 和 HEX 混淆', '波特率/校验位不一致导致乱码', 'RS485 半双工方向控制未考虑', '串口读取阻塞 UI 线程'],
+    checks: [
+      '能显示 COM3, 9600, 8N1',
+      'ASCII/HEX 模式有明确提示',
+      '参数错误时不打开串口',
+      '收发日志包含时间戳',
+      '串口模块和 UI 读取逻辑分开',
+    ],
+    pitfalls: [
+      'ASCII 和 HEX 混淆',
+      '波特率/校验位不一致导致乱码',
+      'RS485 半双工方向控制未考虑',
+      '串口读取阻塞 UI 线程',
+    ],
   },
   {
     id: 'tcp-http-template',
@@ -128,14 +181,36 @@ void CMfcToolkitDlg::OnBnClickedSerialOpen()
     stage: '通讯模块',
     goal: '把 TCP Client/Server 与 HTTP GET/POST 做成独立模块，避免连接和接收阻塞 UI。',
     browserLabIds: ['tcp-simulator', 'http-builder'],
-    files: ['TcpClient.h', 'TcpClient.cpp', 'TcpServer.h', 'TcpServer.cpp', 'HttpClient.h', 'HttpClient.cpp'],
+    files: [
+      'TcpClient.h',
+      'TcpClient.cpp',
+      'TcpServer.h',
+      'TcpServer.cpp',
+      'HttpClient.h',
+      'HttpClient.cpp',
+    ],
     projectFiles: [
       { path: 'TcpClient.h/.cpp', purpose: 'Client 连接、发送、接收、断开' },
       { path: 'TcpServer.h/.cpp', purpose: 'Server 监听、接收客户端、回发' },
       { path: 'HttpClient.h/.cpp', purpose: 'GET/POST 请求构造和响应处理' },
     ],
-    controls: ['IP Edit', 'Port Edit', 'Connect Button', 'Listen Button', 'Method Select', 'Header Edit', 'Body Edit', 'Response Log'],
-    steps: ['按钮事件只读取 UI 参数并启动任务', '线程内执行 connect/send/recv 或 HTTP 请求', '通过 PostMessage 通知 UI 更新日志', '退出时设置 stop 标志并释放 socket', 'HTTP 请求失败时显示状态码和错误文本'],
+    controls: [
+      'IP Edit',
+      'Port Edit',
+      'Connect Button',
+      'Listen Button',
+      'Method Select',
+      'Header Edit',
+      'Body Edit',
+      'Response Log',
+    ],
+    steps: [
+      '按钮事件只读取 UI 参数并启动任务',
+      '线程内执行 connect/send/recv 或 HTTP 请求',
+      '通过 PostMessage 通知 UI 更新日志',
+      '退出时设置 stop 标志并释放 socket',
+      'HTTP 请求失败时显示状态码和错误文本',
+    ],
     code: `constexpr UINT WM_NET_LOG = WM_USER + 101;
 
 UINT TcpWorkerProc(LPVOID pParam)
@@ -154,8 +229,19 @@ void CMfcToolkitDlg::OnBnClickedTcpConnect()
   }
   AfxBeginThread(TcpWorkerProc, this);
 }`,
-    checks: ['连接过程中窗口仍可拖动', '日志通过消息回到 UI 线程', '断线时有错误提示', '重复点击不会启动多个失控线程', 'HTTP Header/Body 显示清晰'],
-    pitfalls: ['把 HTTP 和 TCP 层级混为一谈', 'IP/Port 校验缺失', '粘包/拆包没有协议边界', '工作线程直接操作 UI 控件'],
+    checks: [
+      '连接过程中窗口仍可拖动',
+      '日志通过消息回到 UI 线程',
+      '断线时有错误提示',
+      '重复点击不会启动多个失控线程',
+      'HTTP Header/Body 显示清晰',
+    ],
+    pitfalls: [
+      '把 HTTP 和 TCP 层级混为一谈',
+      'IP/Port 校验缺失',
+      '粘包/拆包没有协议边界',
+      '工作线程直接操作 UI 控件',
+    ],
   },
   {
     id: 'cpp-thread-safety-template',
@@ -170,7 +256,13 @@ void CMfcToolkitDlg::OnBnClickedTcpConnect()
       { path: 'Logger.h/.cpp', purpose: '线程安全日志入口' },
     ],
     controls: ['Start Task Button', 'Stop Button', 'Status Static', 'Log ListBox'],
-    steps: ['用 std::queue 保存待发送消息', '用 std::mutex 保护共享队列和状态', '线程退出前检查 stop 标志', 'new/delete 尽量收敛到少数封装类中', 'UI 更新统一通过消息或主线程函数完成'],
+    steps: [
+      '用 std::queue 保存待发送消息',
+      '用 std::mutex 保护共享队列和状态',
+      '线程退出前检查 stop 标志',
+      'new/delete 尽量收敛到少数封装类中',
+      'UI 更新统一通过消息或主线程函数完成',
+    ],
     code: `std::queue<CString> m_sendQueue;
 std::mutex m_queueMutex;
 std::atomic_bool m_stop { false };
@@ -189,8 +281,18 @@ bool TryDequeueMessage(CString& out)
   m_sendQueue.pop();
   return true;
 }`,
-    checks: ['共享队列读写有锁', '停止按钮能结束任务', '没有重复 delete 或野指针', '日志不会因为多线程同时写而乱序崩溃'],
-    pitfalls: ['delete 后继续使用旧指针', 'vector 越界', '线程未停止就关闭窗口', '锁范围过大导致界面假死'],
+    checks: [
+      '共享队列读写有锁',
+      '停止按钮能结束任务',
+      '没有重复 delete 或野指针',
+      '日志不会因为多线程同时写而乱序崩溃',
+    ],
+    pitfalls: [
+      'delete 后继续使用旧指针',
+      'vector 越界',
+      '线程未停止就关闭窗口',
+      '锁范围过大导致界面假死',
+    ],
   },
   {
     id: 'sqlite-ini-template',
@@ -204,8 +306,19 @@ bool TryDequeueMessage(CString& out)
       { path: 'ConfigStore.h/.cpp', purpose: '封装 SQLite CRUD 与 INI 读写' },
       { path: 'app.ini', purpose: '保存默认串口、IP、端口、主题等轻量配置' },
     ],
-    controls: ['Save Config Button', 'Load Config Button', 'Device Table/List', 'Default Port/IP Inputs'],
-    steps: ['INI 保存轻量默认值', 'SQLite 保存结构化设备表', '启动时加载配置', '修改参数后显式保存并写日志', 'SQL 使用参数化思路，避免直接拼接用户输入'],
+    controls: [
+      'Save Config Button',
+      'Load Config Button',
+      'Device Table/List',
+      'Default Port/IP Inputs',
+    ],
+    steps: [
+      'INI 保存轻量默认值',
+      'SQLite 保存结构化设备表',
+      '启动时加载配置',
+      '修改参数后显式保存并写日志',
+      'SQL 使用参数化思路，避免直接拼接用户输入',
+    ],
     code: `[Serial]
 Port=COM3
 BaudRate=9600
@@ -221,8 +334,19 @@ CREATE TABLE IF NOT EXISTS device (
   protocol TEXT NOT NULL,
   address TEXT NOT NULL
 );`,
-    checks: ['重启后参数仍存在', '数据库文件路径明确', 'SQL 不直接拼接用户输入', '缺失配置时使用默认值', '保存和读取都有日志'],
-    pitfalls: ['数据库相对路径随工作目录变化', 'INI 编码不一致', '配置项缺失没有默认值', 'SQL 字符串拼接风险'],
+    checks: [
+      '重启后参数仍存在',
+      '数据库文件路径明确',
+      'SQL 不直接拼接用户输入',
+      '缺失配置时使用默认值',
+      '保存和读取都有日志',
+    ],
+    pitfalls: [
+      '数据库相对路径随工作目录变化',
+      'INI 编码不一致',
+      '配置项缺失没有默认值',
+      'SQL 字符串拼接风险',
+    ],
   },
   {
     id: 'capstone-integration-template',
@@ -231,10 +355,32 @@ CREATE TABLE IF NOT EXISTS device (
     stage: '综合验收',
     goal: '把串口、TCP、HTTP、SQLite/INI、日志、多线程整合成可验收的 MFC 通用调试工具。',
     browserLabIds: [],
-    files: ['MfcToolkitDlg.cpp', 'SerialManager.cpp', 'TcpClient.cpp', 'TcpServer.cpp', 'HttpClient.cpp', 'ConfigStore.cpp', 'Logger.cpp'],
+    files: [
+      'MfcToolkitDlg.cpp',
+      'SerialManager.cpp',
+      'TcpClient.cpp',
+      'TcpServer.cpp',
+      'HttpClient.cpp',
+      'ConfigStore.cpp',
+      'Logger.cpp',
+    ],
     projectFiles: recommendedProjectFiles,
-    controls: ['Serial Tab', 'TCP Client Tab', 'TCP Server Tab', 'HTTP Tab', 'Config Tab', 'Log Panel', 'Status Bar'],
-    steps: ['先跑通 UI 和日志', '逐个接入串口/TCP/HTTP 模块', '再接 SQLite/INI 保存参数', '最后加入线程停止、错误提示和基本打包测试', '按 Capstone Rubric 自评打分'],
+    controls: [
+      'Serial Tab',
+      'TCP Client Tab',
+      'TCP Server Tab',
+      'HTTP Tab',
+      'Config Tab',
+      'Log Panel',
+      'Status Bar',
+    ],
+    steps: [
+      '先跑通 UI 和日志',
+      '逐个接入串口/TCP/HTTP 模块',
+      '再接 SQLite/INI 保存参数',
+      '最后加入线程停止、错误提示和基本打包测试',
+      '按 Capstone Rubric 自评打分',
+    ],
     code: `// 推荐调用链：按钮事件 -> 参数校验 -> 业务模块 -> 日志/状态更新
 void CMfcToolkitDlg::OnBnClickedSend()
 {
@@ -245,7 +391,19 @@ void CMfcToolkitDlg::OnBnClickedSend()
   }
   DispatchTaskToWorker(task);
 }`,
-    checks: ['必做清单全部完成', '通讯任务不会卡死 UI', '错误提示清楚', '配置可保存并恢复', '模块文件职责明确', '能向他人演示完整收发/保存流程'],
-    pitfalls: ['一开始就追求所有功能导致失控', '没有统一错误处理', '线程退出和窗口关闭冲突', '项目打包时漏带数据库/配置文件'],
+    checks: [
+      '必做清单全部完成',
+      '通讯任务不会卡死 UI',
+      '错误提示清楚',
+      '配置可保存并恢复',
+      '模块文件职责明确',
+      '能向他人演示完整收发/保存流程',
+    ],
+    pitfalls: [
+      '一开始就追求所有功能导致失控',
+      '没有统一错误处理',
+      '线程退出和窗口关闭冲突',
+      '项目打包时漏带数据库/配置文件',
+    ],
   },
 ];

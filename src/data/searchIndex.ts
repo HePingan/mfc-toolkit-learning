@@ -47,7 +47,14 @@ export const searchItems: SearchItem[] = [
       type: 'module' as const,
       title: module.title,
       summary: `${module.subtitle}。${module.description}`,
-      keywords: compactKeywords([module.title, module.subtitle, module.description, ...module.objectives, ...module.concepts, ...module.commonMistakes]),
+      keywords: compactKeywords([
+        module.title,
+        module.subtitle,
+        module.description,
+        ...module.objectives,
+        ...module.concepts,
+        ...module.commonMistakes,
+      ]),
       moduleId: module.id,
       href: `/modules/${module.id}`,
     },
@@ -56,7 +63,13 @@ export const searchItems: SearchItem[] = [
       type: 'section' as const,
       title: `${module.title}：${section.heading}`,
       summary: `${section.body}${section.bullets?.length ? `｜${section.bullets.join('、')}` : ''}`,
-      keywords: compactKeywords([module.title, section.heading, section.body, ...(section.bullets ?? []), section.code ?? '']),
+      keywords: compactKeywords([
+        module.title,
+        section.heading,
+        section.body,
+        ...(section.bullets ?? []),
+        section.code ?? '',
+      ]),
       moduleId: module.id,
       href: `/modules/${module.id}`,
     })),
@@ -77,7 +90,13 @@ export const searchItems: SearchItem[] = [
       type: 'lab' as const,
       title: lab.title,
       summary: `${lab.summary}｜关联模块：${module?.title ?? lab.moduleId}`,
-      keywords: compactKeywords([lab.title, lab.summary, lab.level, module?.title, module?.subtitle]),
+      keywords: compactKeywords([
+        lab.title,
+        lab.summary,
+        lab.level,
+        module?.title,
+        module?.subtitle,
+      ]),
       moduleId: lab.moduleId,
       href: '/labs',
     };
@@ -89,7 +108,16 @@ export const searchItems: SearchItem[] = [
       type: 'quiz' as const,
       title: quiz.question,
       summary: `${typeLabel.quiz}｜${module?.title ?? quiz.moduleId}｜难度：${quiz.difficulty}｜解析：${quiz.explanation}`,
-      keywords: compactKeywords([quiz.question, quiz.explanation, quiz.type, quiz.difficulty, quiz.codeSnippet ?? '', ...(quiz.options ?? []), module?.title, module?.subtitle]),
+      keywords: compactKeywords([
+        quiz.question,
+        quiz.explanation,
+        quiz.type,
+        quiz.difficulty,
+        quiz.codeSnippet ?? '',
+        ...(quiz.options ?? []),
+        module?.title,
+        module?.subtitle,
+      ]),
       moduleId: quiz.moduleId,
       href: `/quiz?module=${quiz.moduleId}`,
     };
@@ -125,7 +153,11 @@ function scoreItem(item: SearchItem, terms: string[]) {
   return score + typeWeight[item.type];
 }
 
-export function searchLearningItems(query: string, type: 'all' | SearchItemType = 'all', moduleId = 'all') {
+export function searchLearningItems(
+  query: string,
+  type: 'all' | SearchItemType = 'all',
+  moduleId = 'all',
+) {
   const normalized = query.trim().toLowerCase();
   const terms = compactKeywords([normalized]);
 

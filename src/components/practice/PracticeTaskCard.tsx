@@ -20,17 +20,37 @@ export function PracticeTaskCard({ template, completed, onToggle }: PracticeTask
           <div className="eyebrow">{template.stage}</div>
           <h3>{template.title}</h3>
         </div>
-        <span className={`badge ${completed ? 'badge-success' : ''}`}>{completed ? '已完成' : '待实践'}</span>
+        <span className={`badge ${completed ? 'badge-success' : ''}`}>
+          {completed ? '已完成' : '待实践'}
+        </span>
       </div>
       <p>{template.goal}</p>
       {relatedLabs.length > 0 && (
         <div className="badge-list">
-          {relatedLabs.map((lab) => <Link className="badge linked-badge" to="/labs" key={lab.id}>浏览器实验：{lab.title}</Link>)}
+          {relatedLabs.map((lab) => (
+            <Link className="badge linked-badge" to="/labs" key={lab.id}>
+              浏览器实验：{lab.title}
+            </Link>
+          ))}
         </div>
       )}
       <div className="practice-mini-grid">
-        <div><strong>建议控件</strong><ul>{template.controls.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul></div>
-        <div><strong>关键验收</strong><ul>{template.checks.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul></div>
+        <div>
+          <strong>建议控件</strong>
+          <ul>
+            {template.controls.slice(0, 5).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <strong>关键验收</strong>
+          <ul>
+            {template.checks.slice(0, 5).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="form-row action-row">
         <Button onClick={onToggle}>{completed ? '取消完成' : '标记本地任务完成'}</Button>
@@ -67,7 +87,11 @@ export function LocalPracticeChecklist({ title, items }: { title: string; items:
     <Card>
       <h3>{title}</h3>
       <div className="local-check-list">
-        {items.map((item) => <label key={item}><input type="checkbox" /> {item}</label>)}
+        {items.map((item) => (
+          <label key={item}>
+            <input type="checkbox" /> {item}
+          </label>
+        ))}
       </div>
       <p className="muted">本清单用于本地 Visual Studio 操作前自查，不会影响课程总进度。</p>
     </Card>
@@ -84,8 +108,14 @@ export function MfcProjectSkeleton({ template }: { template: PracticeTemplate })
         </div>
         <span className="badge">示例，需按实际项目调整</span>
       </div>
-      <CodeBlock code={template.code} language={template.id.includes('sqlite') ? 'ini/sql' : 'cpp'} />
-      <div className="warning-text">注意：这里是学习骨架。真实串口、Socket、SQLite SDK 的 API 需要根据你在 Windows 项目里选用的库和控件 ID 调整。</div>
+      <CodeBlock
+        code={template.code}
+        language={template.id.includes('sqlite') ? 'ini/sql' : 'cpp'}
+      />
+      <div className="warning-text">
+        注意：这里是学习骨架。真实串口、Socket、SQLite SDK 的 API 需要根据你在 Windows
+        项目里选用的库和控件 ID 调整。
+      </div>
     </Card>
   );
 }

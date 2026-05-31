@@ -32,7 +32,10 @@ export function HttpBuilderLab() {
   const [headers, setHeaders] = useState(sample.headers);
   const [body, setBody] = useState(sample.body);
   const { progress, markLab } = useProgress();
-  const requestText = useMemo(() => buildHttpRequest(method, url, body, headers), [method, url, body, headers]);
+  const requestText = useMemo(
+    () => buildHttpRequest(method, url, body, headers),
+    [method, url, body, headers],
+  );
   const validation = getValidationMessage(method, url, headers, body);
 
   const resetSample = () => {
@@ -45,11 +48,18 @@ export function HttpBuilderLab() {
   return (
     <Card>
       <h3>HTTP 请求构造器 {progress.completedLabs.includes('http-builder') && '✅'}</h3>
-      <p className="muted">仅构造报文并模拟响应，不从浏览器向目标设备发真实 HTTP 请求；本地 MFC 可用 WinHTTP/WinINet 练习。</p>
+      <p className="muted">
+        仅构造报文并模拟响应，不从浏览器向目标设备发真实 HTTP 请求；本地 MFC 可用 WinHTTP/WinINet
+        练习。
+      </p>
       <div className="form-row">
         <label>
           Method
-          <select value={method} onChange={(e) => setMethod(e.target.value)} aria-label="HTTP Method">
+          <select
+            value={method}
+            onChange={(e) => setMethod(e.target.value)}
+            aria-label="HTTP Method"
+          >
             <option>GET</option>
             <option>POST</option>
           </select>
@@ -61,19 +71,37 @@ export function HttpBuilderLab() {
       </div>
       <label>
         Header
-        <textarea value={headers} onChange={(e) => setHeaders(e.target.value)} aria-label="HTTP Header 输入" />
+        <textarea
+          value={headers}
+          onChange={(e) => setHeaders(e.target.value)}
+          aria-label="HTTP Header 输入"
+        />
       </label>
       <label>
         Body
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} aria-label="HTTP Body 输入" />
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          aria-label="HTTP Body 输入"
+        />
       </label>
-      {validation && <p className="warning-text" role="alert">{validation}</p>}
-      <pre className="code-block"><code>{requestText}</code></pre>
-      <pre className="result">模拟响应：{"{\n  \"code\": 200,\n  \"message\": \"ok\"\n}"}</pre>
+      {validation && (
+        <p className="warning-text" role="alert">
+          {validation}
+        </p>
+      )}
+      <pre className="code-block">
+        <code>{requestText}</code>
+      </pre>
+      <pre className="result">模拟响应：{'{\n  "code": 200,\n  "message": "ok"\n}'}</pre>
       <div className="form-row">
         <CopyButton text={requestText} label="复制请求报文" />
-        <Button className="button-ghost" type="button" onClick={resetSample}>恢复示例</Button>
-        <Button type="button" onClick={() => markLab('http-builder')}>标记完成</Button>
+        <Button className="button-ghost" type="button" onClick={resetSample}>
+          恢复示例
+        </Button>
+        <Button type="button" onClick={() => markLab('http-builder')}>
+          标记完成
+        </Button>
       </div>
     </Card>
   );

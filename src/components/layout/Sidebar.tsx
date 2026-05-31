@@ -11,7 +11,12 @@ export function Sidebar() {
           <div className="sidebar-title">常用工具</div>
           <div className="side-tool-grid">
             {toolLinks.map((link) => (
-              <NavLink className="side-tool-chip" to={link.to} key={link.to} aria-label={link.label}>
+              <NavLink
+                className="side-tool-chip"
+                to={link.to}
+                key={link.to}
+                aria-label={link.label}
+              >
                 <span aria-hidden="true">{link.icon}</span>
                 <b>{link.short}</b>
                 <em>{link.label}</em>

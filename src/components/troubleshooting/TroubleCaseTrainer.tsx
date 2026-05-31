@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { TroubleCategory, TroubleCase, scoreTroubleAnswer, troubleCases, troubleCategoryLabels } from '../../data/troubleshooting';
+import {
+  TroubleCategory,
+  TroubleCase,
+  scoreTroubleAnswer,
+  troubleCases,
+  troubleCategoryLabels,
+} from '../../data/troubleshooting';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 
@@ -27,11 +33,19 @@ export function TroubleCaseTrainer({ item }: CaseTrainerProps) {
       <div className="trouble-grid">
         <div>
           <h4>现场症状</h4>
-          <ul>{item.symptoms.map((symptom) => <li key={symptom}>{symptom}</li>)}</ul>
+          <ul>
+            {item.symptoms.map((symptom) => (
+              <li key={symptom}>{symptom}</li>
+            ))}
+          </ul>
         </div>
         <div>
           <h4>已有证据</h4>
-          <ul>{item.evidence.map((evidence) => <li key={evidence}>{evidence}</li>)}</ul>
+          <ul>
+            {item.evidence.map((evidence) => (
+              <li key={evidence}>{evidence}</li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -41,16 +55,31 @@ export function TroubleCaseTrainer({ item }: CaseTrainerProps) {
           const isAnswer = submitted && option === item.answer;
           const isWrong = submitted && option === selected && option !== item.answer;
           return (
-            <label className={`${isAnswer ? 'option-correct' : ''} ${isWrong ? 'option-wrong' : ''}`} key={option}>
-              <input type="radio" name={item.id} checked={selected === option} onChange={() => setSelected(option)} /> {option}
+            <label
+              className={`${isAnswer ? 'option-correct' : ''} ${isWrong ? 'option-wrong' : ''}`}
+              key={option}
+            >
+              <input
+                type="radio"
+                name={item.id}
+                checked={selected === option}
+                onChange={() => setSelected(option)}
+              />{' '}
+              {option}
             </label>
           );
         })}
       </div>
 
       <div className="form-row action-row">
-        <Button onClick={() => setSubmitted(true)} disabled={!selected}>提交诊断</Button>
-        {submitted && <span className={`badge ${correct ? 'badge-success' : 'badge-warning'}`}>{correct ? '诊断正确' : '继续复盘证据'}</span>}
+        <Button onClick={() => setSubmitted(true)} disabled={!selected}>
+          提交诊断
+        </Button>
+        {submitted && (
+          <span className={`badge ${correct ? 'badge-success' : 'badge-warning'}`}>
+            {correct ? '诊断正确' : '继续复盘证据'}
+          </span>
+        )}
       </div>
 
       {submitted && (
@@ -58,20 +87,45 @@ export function TroubleCaseTrainer({ item }: CaseTrainerProps) {
           <h4>诊断结论：{item.answer}</h4>
           <p>{item.diagnosis}</p>
           <h4>修复步骤</h4>
-          <ol>{item.fixSteps.map((step) => <li key={step}>{step}</li>)}</ol>
-          <div className="warning-text"><strong>本地实战：</strong>{item.localPractice}</div>
+          <ol>
+            {item.fixSteps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+          <div className="warning-text">
+            <strong>本地实战：</strong>
+            {item.localPractice}
+          </div>
         </div>
       )}
     </Card>
   );
 }
 
-export function TroubleCategoryMatrix({ active, onSelect }: { active: TroubleCategory | 'all'; onSelect: (category: TroubleCategory | 'all') => void }) {
-  const counts = useMemo(() => troubleCases.reduce<Record<string, number>>((acc, item) => {
-    acc[item.category] = (acc[item.category] ?? 0) + 1;
-    return acc;
-  }, {}), []);
-  const entries: Array<TroubleCategory | 'all'> = ['all', 'serial', 'tcp', 'http', 'mfc', 'cpp', 'storage'];
+export function TroubleCategoryMatrix({
+  active,
+  onSelect,
+}: {
+  active: TroubleCategory | 'all';
+  onSelect: (category: TroubleCategory | 'all') => void;
+}) {
+  const counts = useMemo(
+    () =>
+      troubleCases.reduce<Record<string, number>>((acc, item) => {
+        acc[item.category] = (acc[item.category] ?? 0) + 1;
+        return acc;
+      }, {}),
+    [],
+  );
+  const entries: Array<TroubleCategory | 'all'> = [
+    'all',
+    'serial',
+    'tcp',
+    'http',
+    'mfc',
+    'cpp',
+    'storage',
+  ];
   return (
     <Card className="trouble-matrix-card">
       <div className="diagram-head compact-head">
@@ -83,9 +137,14 @@ export function TroubleCategoryMatrix({ active, onSelect }: { active: TroubleCat
       </div>
       <div className="trouble-category-grid">
         {entries.map((entry) => (
-          <button className={active === entry ? 'active' : ''} type="button" onClick={() => onSelect(entry)} key={entry}>
+          <button
+            className={active === entry ? 'active' : ''}
+            type="button"
+            onClick={() => onSelect(entry)}
+            key={entry}
+          >
             <strong>{entry === 'all' ? '全部案例' : troubleCategoryLabels[entry]}</strong>
-            <span>{entry === 'all' ? troubleCases.length : counts[entry] ?? 0} 个案例</span>
+            <span>{entry === 'all' ? troubleCases.length : (counts[entry] ?? 0)} 个案例</span>
           </button>
         ))}
       </div>

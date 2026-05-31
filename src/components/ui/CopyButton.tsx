@@ -25,7 +25,12 @@ async function copyText(text: string) {
   document.body.removeChild(textarea);
 }
 
-export function CopyButton({ text, label = '复制结果', copiedLabel = '已复制', className = 'button-ghost' }: CopyButtonProps) {
+export function CopyButton({
+  text,
+  label = '复制结果',
+  copiedLabel = '已复制',
+  className = 'button-ghost',
+}: CopyButtonProps) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   useEffect(() => {

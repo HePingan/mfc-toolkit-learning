@@ -43,6 +43,9 @@ jobs:
       - name: Navigation verification
         run: npm run verify:navigation
 
+      - name: Style architecture verification
+        run: npm run verify:styles
+
       - name: Bundle budget verification
         run: npm run verify:bundle
 

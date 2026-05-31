@@ -13,6 +13,7 @@ import { downloadZipManifest } from '../../utils/zip';
 import { downloadMarkdown } from '../../utils/download';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { MetricCard } from '../ui/MetricCard';
 import { CodeBlock } from '../course/CodeBlock';
 
 type SelectorProps = {
@@ -364,26 +365,10 @@ export function CodegenStats({ selectedIds, mode }: { selectedIds: string[]; mod
   const pkg = buildCodegenPackage(selectedIds, mode);
   return (
     <section className="stat-grid codegen-stats">
-      <div className="stat-card">
-        <strong>{pkg.selected.length}</strong>
-        <span>已选模块</span>
-        <p>可组合生成项目骨架</p>
-      </div>
-      <div className="stat-card">
-        <strong>{pkg.files.length}</strong>
-        <span>代码文件</span>
-        <p>.h/.cpp/.ini 示例</p>
-      </div>
-      <div className="stat-card">
-        <strong>{pkg.controls.length}</strong>
-        <span>控件 ID</span>
-        <p>MFC Dialog 命名建议</p>
-      </div>
-      <div className="stat-card">
-        <strong>{pkg.messageMap.length}</strong>
-        <span>消息映射</span>
-        <p>按钮事件入口</p>
-      </div>
+      <MetricCard value={pkg.selected.length} label="已选模块" description="可组合生成项目骨架" />
+      <MetricCard value={pkg.files.length} label="代码文件" description=".h/.cpp/.ini 示例" />
+      <MetricCard value={pkg.controls.length} label="控件 ID" description="MFC Dialog 命名建议" />
+      <MetricCard value={pkg.messageMap.length} label="消息映射" description="按钮事件入口" />
     </section>
   );
 }

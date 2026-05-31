@@ -12,6 +12,7 @@
     "verify:routes": "node scripts/verify-routes.mjs",
     "verify:navigation": "node scripts/verify-navigation.mjs",
     "verify:bundle": "node scripts/verify-bundle-budget.mjs",
+    "verify:styles": "node scripts/verify-style-architecture.mjs",
     "verify:mobile": "node scripts/verify-mobile.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",

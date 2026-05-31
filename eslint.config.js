@@ -8,6 +8,7 @@ export default tseslint.config(
   {
     ignores: [
       'dist/**',
+      'published/**',
       'assets/**',
       'node_modules/**',
       '.backup-*/**',

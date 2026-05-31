@@ -4,6 +4,7 @@ node_modules/
 
 # production build / published static assets
 dist/
+published/
 assets/
 tsconfig.tsbuildinfo
 

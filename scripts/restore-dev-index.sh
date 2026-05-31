@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cat > "$ROOT/index.html" <<'HTML'
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MFC 通用工具开发训练营</title>
+    <meta name="description" content="面向 MFC、C++、串口、TCP、HTTP、SQLite/INI 的交互式工程训练营，包含课程、实验、测验、进度和最终项目。" />
+    <meta name="theme-color" content="#07111f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MFC 通用工具开发训练营" />
+    <meta property="og:title" content="MFC 通用工具开发训练营" />
+    <meta property="og:description" content="用交互实验和最终项目学习 MFC、C++、串口、TCP、HTTP、SQLite/INI 工具开发。" />
+    <meta property="og:url" content="https://studymfc.hpa888.top/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+HTML

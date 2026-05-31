@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://studymfc.hpa888.top/sitemap.xml

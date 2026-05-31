@@ -6,7 +6,10 @@ import {
   ControlTable,
   DesignerExportPanel,
 } from '../components/designer/DialogDesigner';
+import { ActionRow } from '../components/ui/ActionRow';
 import { Card } from '../components/ui/Card';
+import { PageHero } from '../components/ui/PageHero';
+import { SectionHead } from '../components/ui/SectionHead';
 import { mfcDialogPresets } from '../data/designer';
 
 export function DesignerPage() {
@@ -26,26 +29,20 @@ export function DesignerPage() {
 
   return (
     <div>
-      <section className="section-head">
-        <div>
-          <div className="eyebrow">MFC Dialog Layout Designer</div>
-          <h2>MFC Dialog 控件布局设计器</h2>
-          <p className="muted">
-            用浏览器草图先规划 Dialog 控件、控件 ID、按钮事件和 Message Map，再到 Visual Studio
-            资源编辑器逐项落地。
-          </p>
-        </div>
-        <span className="badge">浏览器草图 · 本地 VS 实现</span>
-      </section>
+      <SectionHead
+        eyebrow="MFC Dialog Layout Designer"
+        title="MFC Dialog 控件布局设计器"
+        description="用浏览器草图先规划 Dialog 控件、控件 ID、按钮事件和 Message Map，再到 Visual Studio 资源编辑器逐项落地。"
+        aside={<span className="badge">浏览器草图 · 本地 VS 实现</span>}
+      />
 
-      <section className="hero designer-hero">
-        <div className="eyebrow">From Skeleton To UI</div>
-        <h2>先把控件摆清楚，再写 MFC 事件代码</h2>
-        <p>
-          这个页面不生成真实 .rc 文件，也不替代 Visual Studio 资源编辑器；它用于训练初学者理解控件
-          ID、布局分组、事件函数和消息映射之间的关系。
-        </p>
-        <div className="form-row">
+      <PageHero
+        className="designer-hero"
+        eyebrow="From Skeleton To UI"
+        title="先把控件摆清楚，再写 MFC 事件代码"
+        description="这个页面不生成真实 .rc 文件，也不替代 Visual Studio 资源编辑器；它用于训练初学者理解控件 ID、布局分组、事件函数和消息映射之间的关系。"
+      >
+        <ActionRow>
           <Link className="button button-primary" to="/codegen">
             生成代码骨架
           </Link>
@@ -58,8 +55,8 @@ export function DesignerPage() {
           <Link className="button button-ghost" to="/troubleshooting">
             排错训练
           </Link>
-        </div>
-      </section>
+        </ActionRow>
+      </PageHero>
 
       <Card className="designer-preset-card">
         <div className="diagram-head compact-head">

@@ -5,7 +5,10 @@ import {
   TroubleCategoryMatrix,
 } from '../components/troubleshooting/TroubleCaseTrainer';
 import { TroubleCategory, troubleCases, troubleCategoryLabels } from '../data/troubleshooting';
+import { ActionRow } from '../components/ui/ActionRow';
 import { Card } from '../components/ui/Card';
+import { PageHero } from '../components/ui/PageHero';
+import { SectionHead } from '../components/ui/SectionHead';
 
 export function TroubleshootingPage() {
   const [category, setCategory] = useState<TroubleCategory | 'all'>('all');
@@ -34,33 +37,28 @@ export function TroubleshootingPage() {
 
   return (
     <div>
-      <section className="section-head">
-        <div>
-          <div className="eyebrow">Troubleshooting Lab</div>
-          <h2>故障排查训练场</h2>
-          <p className="muted">
-            把文档里的串口、TCP、HTTP、MFC、C++、SQLite/INI 知识转成“现场症状 → 证据 → 根因 →
-            修复步骤”的排错训练。
-          </p>
-        </div>
-        <span className="badge">浏览器模拟 · 本地 MFC 实战前置训练</span>
-      </section>
+      <SectionHead
+        eyebrow="Troubleshooting Lab"
+        title="故障排查训练场"
+        description="把文档里的串口、TCP、HTTP、MFC、C++、SQLite/INI 知识转成“现场症状 → 证据 → 根因 → 修复步骤”的排错训练。"
+        aside={<span className="badge">浏览器模拟 · 本地 MFC 实战前置训练</span>}
+      />
 
-      <section className="hero trouble-hero">
-        <div className="eyebrow">Debug Like Field Engineer</div>
-        <h2>先判断根因，再写代码修复</h2>
-        <p>
-          不要看到乱码就改编码、看到卡死就重启程序。先看证据：参数、日志、线程、路径、协议帧，再定位最小可验证原因。
-        </p>
-        <div className="form-row">
+      <PageHero
+        className="trouble-hero"
+        eyebrow="Debug Like Field Engineer"
+        title="先判断根因，再写代码修复"
+        description="不要看到乱码就改编码、看到卡死就重启程序。先看证据：参数、日志、线程、路径、协议帧，再定位最小可验证原因。"
+      >
+        <ActionRow>
           <Link className="button button-primary" to="/practice">
             进入本地实战模板
           </Link>
           <Link className="button button-ghost" to="/labs">
             回到交互实验室
           </Link>
-        </div>
-      </section>
+        </ActionRow>
+      </PageHero>
 
       <TroubleCategoryMatrix active={category} onSelect={setCategory} />
 

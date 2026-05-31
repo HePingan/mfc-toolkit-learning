@@ -8,6 +8,9 @@ import {
 import { Link } from 'react-router-dom';
 import { modules } from '../data/modules';
 import { Card } from '../components/ui/Card';
+import { MetricCard } from '../components/ui/MetricCard';
+import { PageHero } from '../components/ui/PageHero';
+import { SectionHead } from '../components/ui/SectionHead';
 import { useProgress } from '../hooks/useProgress';
 import {
   LocalPracticeChecklist,
@@ -26,37 +29,41 @@ export function PracticePage() {
 
   return (
     <div>
-      <section className="section-head">
-        <div>
-          <div className="eyebrow">Visual Studio Practice Bridge</div>
-          <h2>本地 MFC 实战桥接</h2>
-          <p className="muted">
-            网页实验负责理解概念；这一页把概念转成 Windows + Visual Studio + MFC
-            中可落地的项目结构、任务卡和验收标准。
-          </p>
-        </div>
-        <span className="badge">
-          本地任务 {completed.length}/{practiceTemplates.length} · {percent}%
-        </span>
-      </section>
+      <SectionHead
+        eyebrow="Visual Studio Practice Bridge"
+        title="本地 MFC 实战桥接"
+        description="网页实验负责理解概念；这一页把概念转成 Windows + Visual Studio + MFC 中可落地的项目结构、任务卡和验收标准。"
+        aside={
+          <span className="badge">
+            本地任务 {completed.length}/{practiceTemplates.length} · {percent}%
+          </span>
+        }
+      />
 
-      <div className="dashboard-grid">
-        <Card>
-          <span className="big-number">1</span>
-          <strong>先建 Dialog 项目</strong>
-          <p className="muted">确认 MFC/ATL 组件、控件 ID、按钮事件和日志窗口。</p>
-        </Card>
-        <Card>
-          <span className="big-number">4</span>
-          <strong>核心模块</strong>
-          <p className="muted">Serial、TCP/HTTP、SQLite/INI、Logger/Thread。</p>
-        </Card>
-        <Card>
-          <span className="big-number">100</span>
-          <strong>Rubric 分</strong>
-          <p className="muted">按功能、稳定性、排错和可维护性评分。</p>
-        </Card>
-      </div>
+      <PageHero
+        className="practice-hero"
+        eyebrow="Local Build Loop"
+        title="先搭项目，再接模块，最后按 Rubric 验收"
+        description="把浏览器里的学习进度转换为 Visual Studio 本地项目任务，按阶段记录证据并形成最终作品集。"
+      >
+        <div className="dashboard-grid">
+          <MetricCard
+            value="1"
+            label="先建 Dialog 项目"
+            description="确认 MFC/ATL 组件、控件 ID、按钮事件和日志窗口。"
+          />
+          <MetricCard
+            value="4"
+            label="核心模块"
+            description="Serial、TCP/HTTP、SQLite/INI、Logger/Thread。"
+          />
+          <MetricCard
+            value="100"
+            label="Rubric 分"
+            description="按功能、稳定性、排错和可维护性评分。"
+          />
+        </div>
+      </PageHero>
 
       <LocalPracticeChecklist
         title="Visual Studio / MFC 环境准备清单"

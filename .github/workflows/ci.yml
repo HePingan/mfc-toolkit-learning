@@ -46,6 +46,9 @@ jobs:
       - name: Style architecture verification
         run: npm run verify:styles
 
+      - name: Page component convergence verification
+        run: npm run verify:page-components
+
       - name: Bundle budget verification
         run: npm run verify:bundle
 

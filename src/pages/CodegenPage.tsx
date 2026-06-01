@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { buildCodegenPackage, codegenModules } from '../data/codegen';
+import { useProgress } from '../hooks/useProgress';
+import { getRecommendedCodegenModuleIds } from '../utils/codegenRecommendations';
 import { Card } from '../components/ui/Card';
 import {
   CodeFilePreview,
@@ -18,6 +20,8 @@ import {
 import { CodegenMode } from '../data/codegenTemplates';
 
 export function CodegenPage() {
+  const { progress } = useProgress();
+  const adaptiveRecommendedIds = useMemo(() => getRecommendedCodegenModuleIds(progress), [progress]);
   const [selectedIds, setSelectedIds] = useState(() =>
     codegenModules.filter((module) => module.recommended).map((module) => module.id),
   );
@@ -32,6 +36,7 @@ export function CodegenPage() {
     setSelectedIds(
       codegenModules.filter((module) => module.recommended).map((module) => module.id),
     );
+  const selectAdaptiveRecommended = () => setSelectedIds(adaptiveRecommendedIds);
 
   return (
     <div>
@@ -75,6 +80,9 @@ export function CodegenPage() {
           <button className="button button-ghost" onClick={selectRecommended}>
             推荐组合
           </button>
+          <button className="button button-primary" onClick={selectAdaptiveRecommended}>
+            按学习记录推荐
+          </button>
           <button className="button button-ghost" onClick={selectAll}>
             全选模块
           </button>
@@ -82,6 +90,30 @@ export function CodegenPage() {
       </section>
 
       <CodegenModeSelector mode={mode} onChange={setMode} />
+      <Card className="codegen-recommend-card">
+        <div className="diagram-head compact-head">
+          <div>
+            <div className="eyebrow">Learning-aware Recommendation</div>
+            <h3>根据实验 / 错题 / Capstone 推荐模块</h3>
+          </div>
+          <button className="button button-primary" onClick={selectAdaptiveRecommended}>
+            应用推荐
+          </button>
+        </div>
+        <p className="muted">
+          系统会综合已完成实验、低分测验模块、历史错题标签和 Capstone 自评项，自动选择最需要生成的 MFC 代码骨架。
+        </p>
+        <div className="badge-list">
+          {adaptiveRecommendedIds.map((id) => {
+            const module = codegenModules.find((item) => item.id === id);
+            return (
+              <span className="badge badge-success" key={id}>
+                {module?.title ?? id}
+              </span>
+            );
+          })}
+        </div>
+      </Card>
       <CodegenModuleSelector modules={codegenModules} selectedIds={selectedIds} onToggle={toggle} />
       <CodegenStats selectedIds={selectedIds} mode={mode} />
 

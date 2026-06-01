@@ -1,5 +1,5 @@
 import { QuizQuestion } from '../../data/quizzes';
-import { isCorrect } from '../../utils/quiz';
+import { getQuestionTags, isCorrect } from '../../utils/quiz';
 
 export function QuestionRenderer({
   question,
@@ -14,6 +14,7 @@ export function QuestionRenderer({
 }) {
   const selected = Array.isArray(value) ? value : value ? [value] : [];
   const answerList = Array.isArray(question.answer) ? question.answer : [question.answer];
+  const tags = getQuestionTags(question).slice(0, 5);
   const hasAnswer = selected.length > 0;
   const correct = isCorrect(question, value);
   const toggle = (option: string) => {
@@ -30,7 +31,16 @@ export function QuestionRenderer({
       className={`question ${submitted ? (correct ? 'question-correct' : hasAnswer ? 'question-wrong' : 'question-empty') : ''}`}
     >
       <div className="question-head">
-        <h4>{question.question}</h4>
+        <div>
+          <h4>{question.question}</h4>
+          <div className="badge-list question-tag-list">
+            {tags.map((tag) => (
+              <span className="badge" key={tag}>
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
         <span className="badge">
           {question.type} · {question.difficulty}
         </span>

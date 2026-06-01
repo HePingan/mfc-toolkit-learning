@@ -11,6 +11,7 @@ export default tseslint.config(
       'published/**',
       'assets/**',
       'node_modules/**',
+      '.deploy-backups/**',
       '.backup-*/**',
       '.hermes/**',
       'qa/**',

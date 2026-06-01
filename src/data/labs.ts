@@ -1,3 +1,15 @@
+export type LabExportRecord = {
+  status: 'pending' | 'completed';
+  markdown: string;
+};
+
+export type LabDetail = {
+  steps: string[];
+  acceptance: string[];
+  commonPitfalls: string[];
+  exportRecord: LabExportRecord;
+};
+
 export type Lab = {
   id: string;
   title: string;
@@ -12,6 +24,8 @@ export type Lab = {
     acceptance: string[];
   };
 };
+
+export type EnrichedLab = Lab & LabDetail;
 
 export const labs: Lab[] = [
   {
@@ -267,3 +281,55 @@ export const labs: Lab[] = [
     },
   },
 ];
+
+const modulePitfalls: Record<string, string[]> = {
+  serial: ['参数只显示不校验，导致真实设备乱码', 'ASCII/HEX 边界没处理，奇数字节或非法字符仍允许发送', '只记录“成功/失败”，没有记录端口、波特率和原始帧'],
+  network: ['在 UI 线程直接 connect/recv，现场表现为窗口卡死', '把一次 recv 当成完整业务包，忽略粘包/半包', '错误日志只写“连接失败”，没有区分 DNS、超时、端口占用和状态码'],
+  mfc: ['控件 ID、DDX 变量和 Message Map 名称不一致', '工作线程直接操作控件而不是 PostMessage 回 UI 线程', '没有在 OnInitDialog 初始化默认状态和日志入口'],
+  'cpp-core': ['对象所有权不清晰，窗口关闭后线程继续访问悬空指针', '共享队列无锁或锁内执行耗时 IO', '容器访问前不检查空队列、下标范围或生命周期'],
+  storage: ['配置缺失时没有默认值，首次启动直接失败', 'SQL 字符串直接拼接用户输入', '保存后不做回读验证，现场无法确认写入路径和内容'],
+};
+
+const moduleSteps: Record<string, string[]> = {
+  serial: ['确认浏览器模拟输入/输出关系', '列出本地 MFC 控件 ID 与默认值', '封装参数/帧构造类并接入按钮事件', '补充日志、校验和错误提示', '按固定样例和异常输入做验收'],
+  network: ['确认请求/连接的字段模型', '拆分 UI 输入、网络执行和日志输出', '把耗时连接/收发放到工作线程', '补齐超时、断线和协议错误提示', '用本机服务或模拟响应验收'],
+  mfc: ['建立 Dialog 控件清单', '用类向导或手写绑定 DDX 与 Message Map', '把按钮/定时器/自定义消息串成流程', '用断点验证事件入口', '补齐线程回 UI 的消息路径'],
+  'cpp-core': ['画出对象生命周期和共享数据边界', '先实现最小数据结构演示', '增加空值、越界和并发保护', '把日志输出统一到线程安全入口', '用关闭窗口、重复启动等场景验收'],
+  storage: ['确定配置/表结构和默认值', '封装读写 Repository/Store 类', '把 UI 字段映射为结构体', '增加失败日志、路径提示和回读验证', '用重启恢复和非法输入验收'],
+};
+
+function markdownList(items: string[]) {
+  return items.map((item) => `- ${item}`).join('\n');
+}
+
+export function buildLabExportRecord(lab: Lab | EnrichedLab, completed = false): LabExportRecord {
+  const status = completed ? 'completed' : 'pending';
+  return {
+    status,
+    markdown: `# ${lab.title}\n\n状态：${status}\n等级：${lab.level}\n模块：${lab.moduleId}\n\n## 实验摘要\n${lab.summary}\n\n## 本地 MFC 目标\n${lab.localMfc.goal}\n\n## 本地 MFC 文件\n${markdownList(lab.localMfc.files)}\n\n## 控件 ID\n${markdownList(lab.localMfc.controls)}\n\n## Message Map\n${markdownList(lab.localMfc.messageMap)}\n\n## 验收点\n${markdownList(lab.localMfc.acceptance)}\n`,
+  };
+}
+
+export function enrichLabDetails(lab: Lab): EnrichedLab {
+  const moduleSpecificSteps = moduleSteps[lab.moduleId] ?? [
+    '理解浏览器模拟目标',
+    '列出本地 MFC 文件和控件',
+    '实现最小可运行路径',
+    '补充日志和异常提示',
+  ];
+  const moduleSpecificPitfalls = modulePitfalls[lab.moduleId] ?? [
+    '只完成界面，没有验收真实流程',
+    '错误提示过于笼统，无法定位现场问题',
+    '缺少可复制的交付记录',
+  ];
+  return {
+    ...lab,
+    steps: [...moduleSpecificSteps, `对照 ${lab.localMfc.files[0]} 等文件完成代码迁移`],
+    acceptance: lab.localMfc.acceptance,
+    commonPitfalls: moduleSpecificPitfalls,
+    exportRecord: buildLabExportRecord(lab, false),
+  };
+}
+
+export const enrichedLabs: EnrichedLab[] = labs.map(enrichLabDetails);
+

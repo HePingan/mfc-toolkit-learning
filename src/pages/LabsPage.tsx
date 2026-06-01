@@ -12,7 +12,7 @@ import { StlContainerLab } from '../components/labs/StlContainerLab';
 import { ThreadLockLab } from '../components/labs/ThreadLockLab';
 import { SqliteCrudLab } from '../components/labs/SqliteCrudLab';
 import { IniEditorLab } from '../components/labs/IniEditorLab';
-import { Lab, labs } from '../data/labs';
+import { Lab, buildLabExportRecord, enrichedLabs, labs } from '../data/labs';
 import { modules } from '../data/modules';
 import { useProgress } from '../hooks/useProgress';
 import { LabMatrixDiagram } from '../components/course/Diagrams';
@@ -31,6 +31,53 @@ const labViews: Record<string, ReactNode> = {
   'sqlite-crud': <SqliteCrudLab />,
   'ini-editor': <IniEditorLab />,
 };
+
+function LabDetailPanel({ lab, completed }: { lab: Lab; completed: boolean }) {
+  const detail = enrichedLabs.find((item) => item.id === lab.id);
+  if (!detail) return null;
+  const record = buildLabExportRecord(detail, completed);
+  const copyRecord = async () => {
+    await navigator.clipboard.writeText(record.markdown);
+  };
+  return (
+    <Card className="lab-detail-card">
+      <div className="diagram-head compact-head">
+        <div>
+          <div className="eyebrow">Lab Execution Record</div>
+          <h3>实验详情与交付记录</h3>
+        </div>
+        <button className="button button-ghost" onClick={copyRecord} type="button">
+          复制记录
+        </button>
+      </div>
+      <div className="lab-detail-grid">
+        <div>
+          <strong>执行步骤</strong>
+          {detail.steps.map((item, index) => (
+            <span key={item}>
+              Step {index + 1} · {item}
+            </span>
+          ))}
+        </div>
+        <div>
+          <strong>验收清单</strong>
+          {detail.acceptance.map((item) => (
+            <span key={item}>✅ {item}</span>
+          ))}
+        </div>
+        <div>
+          <strong>常见错误</strong>
+          {detail.commonPitfalls.map((item) => (
+            <span key={item}>⚠️ {item}</span>
+          ))}
+        </div>
+      </div>
+      <pre className="code-block lab-export-preview">
+        <code>{record.markdown}</code>
+      </pre>
+    </Card>
+  );
+}
 
 function LocalMfcHint({ lab }: { lab: Lab }) {
   return (
@@ -198,6 +245,7 @@ export function LabsPage() {
                 <p>{lab.summary}</p>
               </div>
               {labViews[lab.id]}
+              <LabDetailPanel lab={lab} completed={progress.completedLabs.includes(lab.id)} />
               <LocalMfcHint lab={lab} />
             </div>
           ),

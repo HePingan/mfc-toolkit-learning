@@ -1,10 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import {
-  buildQuizAnalytics,
-  buildQuizForMode,
-  getQuestionTags,
-  getWeakQuestionTags,
-} from './quiz';
+import { buildQuizAnalytics, buildQuizForMode, getQuestionTags, getWeakQuestionTags } from './quiz';
 import { quizzes } from '../data/quizzes';
 import { ProgressState, defaultProgress } from './progress';
 
@@ -29,7 +24,11 @@ describe('quiz enhancement helpers', () => {
 
   test('builds wrong and weak quiz modes from progress', () => {
     const wrongQuiz = buildQuizForMode('wrong', 'overview', progressWithWeakSerial);
-    expect(wrongQuiz.map((question) => question.id)).toEqual(['serial-01', 'serial-03', 'network-02']);
+    expect(wrongQuiz.map((question) => question.id)).toEqual([
+      'serial-01',
+      'serial-03',
+      'network-02',
+    ]);
 
     const weakQuiz = buildQuizForMode('weak', 'overview', progressWithWeakSerial);
     expect(weakQuiz.length).toBeGreaterThan(0);

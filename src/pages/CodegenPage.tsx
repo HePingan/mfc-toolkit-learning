@@ -21,7 +21,10 @@ import { CodegenMode } from '../data/codegenTemplates';
 
 export function CodegenPage() {
   const { progress } = useProgress();
-  const adaptiveRecommendedIds = useMemo(() => getRecommendedCodegenModuleIds(progress), [progress]);
+  const adaptiveRecommendedIds = useMemo(
+    () => getRecommendedCodegenModuleIds(progress),
+    [progress],
+  );
   const [selectedIds, setSelectedIds] = useState(() =>
     codegenModules.filter((module) => module.recommended).map((module) => module.id),
   );
@@ -101,7 +104,8 @@ export function CodegenPage() {
           </button>
         </div>
         <p className="muted">
-          系统会综合已完成实验、低分测验模块、历史错题标签和 Capstone 自评项，自动选择最需要生成的 MFC 代码骨架。
+          系统会综合已完成实验、低分测验模块、历史错题标签和 Capstone 自评项，自动选择最需要生成的
+          MFC 代码骨架。
         </p>
         <div className="badge-list">
           {adaptiveRecommendedIds.map((id) => {

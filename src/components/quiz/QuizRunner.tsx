@@ -124,7 +124,10 @@ export function QuizRunner() {
   const [submitted, setSubmitted] = useState(false);
   const { progress, saveQuizScore } = useProgress();
   const analytics = useMemo(() => buildQuizAnalytics(progress), [progress]);
-  const questions = useMemo(() => buildQuizForMode(mode, moduleId, progress), [mode, moduleId, progress]);
+  const questions = useMemo(
+    () => buildQuizForMode(mode, moduleId, progress),
+    [mode, moduleId, progress],
+  );
   const result = useMemo(() => gradeQuiz(questions, answers), [answers, questions]);
   const answered = questions.filter(
     (q) =>
@@ -195,7 +198,11 @@ export function QuizRunner() {
       </Card>
 
       <div className="form-row quiz-toolbar">
-        <select value={moduleId} onChange={(e) => changeModule(e.target.value)} disabled={mode !== 'module'}>
+        <select
+          value={moduleId}
+          onChange={(e) => changeModule(e.target.value)}
+          disabled={mode !== 'module'}
+        >
           {modules.map((m) => (
             <option value={m.id} key={m.id}>
               {m.title}
@@ -209,7 +216,11 @@ export function QuizRunner() {
         <span className="badge">当前题量：{questions.length}</span>
       </div>
       <div className="progress-bar">
-        <span style={{ width: `${questions.length ? Math.round((answered / questions.length) * 100) : 0}%` }} />
+        <span
+          style={{
+            width: `${questions.length ? Math.round((answered / questions.length) * 100) : 0}%`,
+          }}
+        />
       </div>
       {questions.length ? (
         questions.map((q) => (

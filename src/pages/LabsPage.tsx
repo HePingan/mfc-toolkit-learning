@@ -54,7 +54,9 @@ function LabDetailPanel({ lab, completed }: { lab: Lab; completed: boolean }) {
         <div>
           <strong>执行步骤</strong>
           {detail.steps.map((item, index) => (
-            <span key={item}>Step {index + 1} · {item}</span>
+            <span key={item}>
+              Step {index + 1} · {item}
+            </span>
           ))}
         </div>
         <div>

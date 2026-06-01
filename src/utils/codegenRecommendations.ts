@@ -11,7 +11,17 @@ const moduleToCodegen: Record<string, string[]> = {
   mfc: ['dialog', 'logger'],
   'cpp-core': ['worker-thread', 'logger'],
   storage: ['sqlite-store', 'config-store'],
-  capstone: ['dialog', 'logger', 'serial', 'tcp-client', 'tcp-server', 'http-client', 'sqlite-store', 'config-store', 'worker-thread'],
+  capstone: [
+    'dialog',
+    'logger',
+    'serial',
+    'tcp-client',
+    'tcp-server',
+    'http-client',
+    'sqlite-store',
+    'config-store',
+    'worker-thread',
+  ],
 };
 
 const tagToCodegen: Record<string, string[]> = {

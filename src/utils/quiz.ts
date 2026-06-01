@@ -49,7 +49,8 @@ export function gradeQuiz(questions: QuizQuestion[], answers: Record<string, str
 }
 
 export function getQuestionTags(question: QuizQuestion) {
-  const text = `${question.question} ${question.explanation} ${question.codeSnippet ?? ''}`.toLowerCase();
+  const text =
+    `${question.question} ${question.explanation} ${question.codeSnippet ?? ''}`.toLowerCase();
   const tags = [question.moduleId, question.difficulty, ...(typeTags[question.type] ?? [])];
 
   if (/modbus|rtu|crc|寄存器|功能码/.test(text)) tags.push('modbus');
@@ -74,7 +75,8 @@ export function getRelatedLabIds(question: QuizQuestion) {
 export function getRelatedCodegenModules(question: QuizQuestion) {
   const tags = getQuestionTags(question);
   const modules = [...(moduleCodegenMap[question.moduleId] ?? [])];
-  if (tags.includes('serial') || tags.includes('modbus') || tags.includes('crc')) modules.push('serial');
+  if (tags.includes('serial') || tags.includes('modbus') || tags.includes('crc'))
+    modules.push('serial');
   if (tags.includes('network')) modules.push('network');
   if (tags.includes('storage')) modules.push('storage');
   if (tags.includes('mfc')) modules.push('ui-shell');
@@ -139,7 +141,10 @@ export function buildQuizAnalytics(progress: ProgressState) {
       ? Math.round(scoreEntries.reduce((sum, [, score]) => sum + score, 0) / scoreEntries.length)
       : 0,
     weakestModuleId,
-    topWeakTags: Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]).map(([tag]) => tag).slice(0, 8),
+    topWeakTags: Array.from(tagCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([tag]) => tag)
+      .slice(0, 8),
     recommendedLabIds: unique(wrongQuestions.flatMap(getRelatedLabIds)),
     recommendedCodegenModules: unique(wrongQuestions.flatMap(getRelatedCodegenModules)),
   };

@@ -13,7 +13,15 @@ const progress: ProgressState = {
 describe('codegen recommendations', () => {
   test('recommends modules from labs, wrong questions, low scores, and capstone checks', () => {
     expect(getRecommendedCodegenModuleIds(progress)).toEqual(
-      expect.arrayContaining(['serial', 'tcp-client', 'tcp-server', 'http-client', 'sqlite-store', 'config-store', 'dialog']),
+      expect.arrayContaining([
+        'serial',
+        'tcp-client',
+        'tcp-server',
+        'http-client',
+        'sqlite-store',
+        'config-store',
+        'dialog',
+      ]),
     );
   });
 
